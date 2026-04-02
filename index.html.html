@@ -481,6 +481,7 @@ details[open] summary::after{content:'−'}
 
     <div id="torta-resumen" style="margin-top:1.25rem;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem"></div>
     <div id="torta-registro" style="margin-top:1rem;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem"></div>
+    <div id="torta-form" style="background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;margin-top:.75rem"></div>
   </div>
 </main>
 </div>
@@ -885,7 +886,10 @@ function loadReal() {
 function updateReal(idx, field, val) {
   REAL[idx][field] = field === 'notas' ? val : (+val || 0);
   saveReal();
-  renderTorta();
+  updateTortaSummary(); // only update chart + summary, NOT the form inputs
+  renderPlan();         // update plan table columns
+  renderScenarios();    // update acumulado scenarios
+  renderChart();        // update line chart
   showSaved();
 }
 
@@ -1047,7 +1051,9 @@ function getTortaData(i) {
   return { sueldo, tarjetas, fijos, ahorroARS, libre };
 }
 
-function renderTorta() {
+function updateTortaSummary() {
+  const i = tortaIdx;
+  if (!document.getElementById('chart-torta')) return;
   const i = tortaIdx;
   const d = getTortaData(i);
   const extra = getExtra(i);
@@ -1129,54 +1135,40 @@ function renderTorta() {
       <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">${c.label}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:${c.color};font-weight:400">${c.value}</div>
     </div>`).join('');
+  
+}
 
-  // Registro real
-  const r = REAL[i];
+function renderTorta() {
+  updateTortaSummary();
+  // Re-render the form inputs (only called when switching months)
+  const i = tortaIdx;
+  const r = REAL[i] || { usd: 0, notas: '' };
   const hasReal = r.usd > 0 || r.notas !== '';
-  const realSueldo = getSueldo(i) + getExtra(i);
-  const realSobrante = realSueldo - (r.tarjetas||0) - (r.fijos||0);
-  document.getElementById('torta-registro').innerHTML = `
+  const formEl = document.getElementById('torta-form');
+  if (!formEl) return;
+  formEl.innerHTML = `
     <div style="border-top:1px solid var(--border);padding-top:1.25rem;margin-top:.5rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
         <div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text)">Registrá lo <em style="color:var(--rose-dark)">real</em></div>
           <div style="font-size:12px;color:var(--text-muted)">Lo que realmente pasó este mes — queda guardado</div>
         </div>
-        ${hasReal ? `<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">✦ Registrado</span>` : ''}
+        ${hasReal ? '<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">✦ Registrado</span>' : ''}
       </div>
-      <div style="display:grid;grid-template-columns:1fr 2fr;gap:.75rem;margin-bottom:.75rem">
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:.75rem">
         <div class="inp-group">
           <label>USD que compraste este mes</label>
-          <input type="number" placeholder="ej: 200" value="${r.usd||''}"
+          <input type="number" placeholder="ej: 200" value="${r.usd || ''}"
             onchange="updateReal(${i},'usd',this.value)"
             style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
         </div>
         <div class="inp-group">
           <label>Notas del mes</label>
-          <input type="text" placeholder="ej: Compré dólares con parte del aguinaldo, gasté más en salidas..." value="${r.notas||''}"
+          <input type="text" placeholder="ej: Compré dólares con parte del aguinaldo..." value="${r.notas || ''}"
             onchange="updateReal(${i},'notas',this.value)"
             style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
         </div>
       </div>
-      ${hasReal ? `
-      <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:12px;padding:.875rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem">
-        <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Gastos del mes</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c47a8a">$${f(realTarjetas+realFijos)}</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">USD comprados</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#4a8a44">U$S ${f(r.usd)}</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Te sobró</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c9a96e">$${f(Math.max(0,realSobrante-(r.usd||0)*S.tc_mod[i]))}</div>
-        </div>
-        <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Te sobró</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c9a96e">$${f(Math.max(0, realSobrante - (r.usd||0)*S.tc_mod[i]))}</div>
-        </div>
-      </div>` : ''}
     </div>`;
 }
 
