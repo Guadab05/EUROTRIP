@@ -915,29 +915,23 @@ function renderPlan(){
   const tcs=[S.tc_opt,S.tc_mod,S.tc_pes];
   const cls=['opt','mod','pes'];
   ['tabla-plan-opt','tabla-plan-mod','tabla-plan-pes'].forEach((id,si)=>{
-    let h=`<thead><tr>
-      <th>Mes</th>
-      <th>Sobrante ARS</th>
-      <th class="${cls[si]}">TC</th>
-      <th class="${cls[si]}">Ideal USD</th>
-      <th class="${cls[si]}">Real USD</th>
-      <th class="${cls[si]}">Acum USD</th>
-    </tr></thead><tbody>`;
+    let h='<thead><tr><th>Mes</th><th>Sobrante ARS</th><th class="'+cls[si]+'">TC</th><th class="'+cls[si]+'">Ideal USD</th><th class="'+cls[si]+'">Real USD</th><th class="'+cls[si]+'">Acum USD</th></tr></thead><tbody>';
     MONTHS_LABEL.forEach((m,i)=>{
       const s=getSobrante(i);
       const idealUSD=getIdealUSD(i,tcs[si]);
-      const realUSD=REAL[i].usd>0?REAL[i].usd:null;
-      const cumplido=realUSD!==null?(realUSD>=idealUSD-0.01):null;
-      const realStyle=cumplido===null?'color:var(--text-muted)'
-        :cumplido?'color:#4a8a44;font-weight:500':'color:#c47a8a;font-weight:500';
-      h+=`<tr class="${IS_EXTRA[i]?'extra':''}">
-        <td>${m}</td>
-        <td>$${f(s)}</td>
-        <td class="muted">$${f(tcs[si][i])}</td>
-        <td class="${cls[si]}"><b>${fu(idealUSD)}</b></td>
-        <td style="${realStyle}">${realUSD!==null?fu(realUSD)+'${cumplido?' ✓':' ↓'}':'—'}</td>
-        <td class="${cls[si]} big"><b>${fu(acums[si][i])}</b></td>
-      </tr>`;
+      const realUSD=REAL[i]&&REAL[i].usd>0?REAL[i].usd:null;
+      const cumplido=realUSD!==null&&realUSD>=idealUSD-0.01;
+      const realColor=realUSD===null?'var(--text-muted)':cumplido?'#4a8a44':'#c47a8a';
+      const realText=realUSD===null?'—':fu(realUSD)+(cumplido?' ✓':' ↓');
+      const rowCls=IS_EXTRA[i]?'extra':'';
+      h+='<tr class="'+rowCls+'">'
+        +'<td>'+m+'</td>'
+        +'<td>$'+f(s)+'</td>'
+        +'<td class="muted">$'+f(tcs[si][i])+'</td>'
+        +'<td class="'+cls[si]+'"><b>'+fu(idealUSD)+'</b></td>'
+        +'<td style="color:'+realColor+';font-weight:'+(realUSD?'500':'300')+'">'+realText+'</td>'
+        +'<td class="'+cls[si]+' big"><b>'+fu(acums[si][i])+'</b></td>'
+        +'</tr>';
     });
     document.getElementById(id).innerHTML=h+'</tbody>';
   });
@@ -1129,9 +1123,7 @@ function renderTorta() {
   document.getElementById('torta-resumen').innerHTML = [
     { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
     { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
-    { label: realUSD>0?'Ahorro real':'Ahorro mínimo',
-      value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/S.tc_mod[i]),
-      color: '#4a8a44' },
+    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/S.tc_mod[i]), color: '#4a8a44' },
     { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
   ].map(c => `
     <div style="text-align:center;padding:.5rem">
