@@ -1085,12 +1085,12 @@ function updateTortaSummary() {
     'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
 
   const realUSD = (REAL[i] && REAL[i].usd !== null) ? REAL[i].usd : 0;
-  const tcUsed = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
+  const tcUsed = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_opt[i];
   const realARS = realUSD * tcUsed;
   // If real data exists, replace projected ahorro with real
   const ahorroSlice = realUSD > 0
     ? { label: 'Ahorro real (USD)', value: realARS, color: '#4a8a44' }
-    : { label: 'Ahorro (TC moderado)', value: d.ahorroARS, color: '#4a8a44' };
+    : { label: 'Ahorro (TC optimista)', value: d.ahorroARS, color: '#4a8a44' };
   const libreReal = realUSD > 0
     ? Math.max(0, d.sueldo - d.tarjetas - d.fijos - realARS)
     : d.libre;
@@ -1135,7 +1135,7 @@ function updateTortaSummary() {
   // Legend
   document.getElementById('torta-legend').innerHTML = slices.map(s => {
     const isAhorro = s.label.includes('Ahorro');
-    const tcForLegend = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
+    const tcForLegend = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_opt[i];
     const usdLine = isAhorro
       ? ` = <b style="color:#4a8a44">U$S ${f(s.value/tcForLegend)}</b>`
       : '';
@@ -1152,7 +1152,7 @@ function updateTortaSummary() {
   document.getElementById('torta-resumen').innerHTML = [
     { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
     { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
-    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_mod[i])), color: '#4a8a44' },
+    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_opt[i])), color: '#4a8a44' },
     { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
   ].map(c => `
     <div style="text-align:center;padding:.5rem">
