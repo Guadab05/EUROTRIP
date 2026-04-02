@@ -225,7 +225,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 6rem}
 .sc-opt .sc-value{color:#3a7034}.sc-mod .sc-value{color:#905010}.sc-pes .sc-value{color:#902020}
 .sc-badge{font-size:11px;padding:3px 10px;border-radius:20px;display:inline-block}
 .sc-opt .sc-badge{background:#d4f0d0;color:#3a7034}.sc-mod .sc-badge{background:#ffe0b0;color:#905010}.sc-pes .sc-badge{background:#ffd0d0;color:#902020}
-.scenario-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.scenario-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:2rem}@media(max-width:480px){.scenario-row{grid-template-columns:1fr 1fr}}
 
 /* TABLAS */
 .table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.7);margin-bottom:1.5rem}
@@ -245,16 +245,18 @@ tr.extra td{background:linear-gradient(to right,rgba(242,196,206,.15),transparen
 .inputs-panel summary{font-family:'Cormorant Garamond',serif;font-size:1.3rem;cursor:pointer;color:var(--text);list-style:none;display:flex;align-items:center;gap:.5rem}
 .inputs-panel summary::after{content:'+';font-size:1.5rem;color:var(--rose-dark);margin-left:auto}
 details[open] summary::after{content:'−'}
-.inputs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;margin-top:1.25rem}
+.inputs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-top:1.25rem}@media(max-width:480px){.inputs-grid{grid-template-columns:1fr}}
 .inp-group{display:flex;flex-direction:column;gap:5px}
 .inp-group label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
 .inp-group input{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%}
 .inp-group input:focus{outline:none;border-color:var(--rose-deep)}
 .inp-section-title{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-soft);margin:1.25rem 0 .6rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
 .tarjetas-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
+@media(max-width:600px){.tarjetas-grid{grid-template-columns:1fr 1fr}.tarjetas-grid .th:first-child,.tarjetas-grid div[style*="text-soft"]{grid-column:1/-1;font-weight:500;color:var(--text-soft);padding-top:.5rem}}
 .tarjetas-grid .th,.tc-grid .th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);font-weight:500}
 .tarjetas-grid input,.tc-grid input{padding:5px 9px;font-size:12px;border-radius:8px;border:1px solid var(--border);font-family:'Jost';color:var(--text);background:white}
 .tc-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
+@media(max-width:600px){.tc-grid{grid-template-columns:1fr 1fr;gap:.4rem .5rem}.tc-grid .th:first-child,.tc-grid div[style*="text-soft"]{grid-column:1/-1;font-weight:500;color:var(--text-soft);padding-top:.5rem}.tc-grid input{font-size:12px;padding:5px 8px}}
 .three-col-tables{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .col-table{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
 .col-table-header{padding:9px 12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
@@ -445,6 +447,10 @@ details[open] summary::after{content:'−'}
       <div class="col-table"><div class="col-table-header pes-h">Pesimista · ~$2.800</div><div class="table-wrap" style="max-height:380px;overflow-y:auto;border-radius:0 0 14px 14px;border-top:none"><table id="tabla-plan-pes"></table></div></div>
     </div>
   </div>
+  <p style="font-size:11px;color:var(--text-muted);margin-bottom:.75rem">
+    <span style="color:var(--rose-dark)">✦</span> TC real cargado — ese mes usa el dólar real en vez del proyectado.
+    Los meses futuros siguen usando la proyección del escenario.
+  </p>
   <div id="tp-minimo" class="tab-panel">
     <div id="minimo-cols"></div>
   </div>
@@ -935,18 +941,23 @@ function renderPlan(){
     let h='<thead><tr><th>Mes</th><th>Sobrante ARS</th><th class="'+cls[si]+'">TC</th><th class="'+cls[si]+'">Ideal USD</th><th class="'+cls[si]+'">Real USD</th><th class="'+cls[si]+'">Acum USD</th></tr></thead><tbody>';
     MONTHS_LABEL.forEach((m,i)=>{
       const s=getSobrante(i);
-      const idealUSD=getIdealUSD(i,tcs[si]);
+      // Use real TC if available, otherwise use projected
+      const effectiveTc = (REAL[i]&&REAL[i].tc) ? REAL[i].tc : tcs[si][i];
+      const isRealTc = !!(REAL[i]&&REAL[i].tc);
+      const idealUSD=getIdealUSD(i,[...tcs[si].slice(0,i), effectiveTc, ...tcs[si].slice(i+1)]);
       const realUSD=REAL[i]&&REAL[i].usd!==null?REAL[i].usd:null;
       const cumplido=realUSD!==null&&realUSD>=idealUSD-0.01;
       const realColor=realUSD===null?'var(--text-muted)':cumplido?'#4a8a44':'#c47a8a';
       const realText=realUSD===null?'—':fu(realUSD)+(cumplido?' ✓':' ↓');
       const rowCls=IS_EXTRA[i]?'extra':'';
+      const tcDisplay='$'+f(effectiveTc)+(isRealTc?' ✦':'');
+      const tcColor=isRealTc?'color:var(--rose-dark)':'color:var(--text-muted)';
       h+='<tr class="'+rowCls+'">'
         +'<td>'+m+'</td>'
         +'<td>$'+f(s)+'</td>'
-        +'<td class="muted">$'+f(tcs[si][i])+'</td>'
+        +'<td style="'+tcColor+'">'+tcDisplay+'</td>'
         +'<td class="'+cls[si]+'"><b>'+fu(idealUSD)+'</b></td>'
-        +'<td style="color:'+realColor+';font-weight:'+(realUSD?'500':'300')+'">'+realText+'</td>'
+        +'<td style="color:'+realColor+';font-weight:'+(realUSD!==null?'500':'300')+'">'+realText+'</td>'
         +'<td class="'+cls[si]+' big"><b>'+fu(acums[si][i])+'</b></td>'
         +'</tr>';
     });
@@ -1076,12 +1087,12 @@ function updateTortaSummary() {
     'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
 
   const realUSD = (REAL[i] && REAL[i].usd !== null) ? REAL[i].usd : 0;
-  const tcUsed = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
+  const tcUsed = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_opt[i];
   const realARS = realUSD * tcUsed;
   // If real data exists, replace projected ahorro with real
   const ahorroSlice = realUSD > 0
     ? { label: 'Ahorro real (USD)', value: realARS, color: '#4a8a44' }
-    : { label: 'Ahorro (TC moderado)', value: d.ahorroARS, color: '#4a8a44' };
+    : { label: 'Ahorro (TC optimista)', value: d.ahorroARS, color: '#4a8a44' };
   const libreReal = realUSD > 0
     ? Math.max(0, d.sueldo - d.tarjetas - d.fijos - realARS)
     : d.libre;
@@ -1126,7 +1137,7 @@ function updateTortaSummary() {
   // Legend
   document.getElementById('torta-legend').innerHTML = slices.map(s => {
     const isAhorro = s.label.includes('Ahorro');
-    const tcForLegend = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
+    const tcForLegend = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_opt[i];
     const usdLine = isAhorro
       ? ` = <b style="color:#4a8a44">U$S ${f(s.value/tcForLegend)}</b>`
       : '';
@@ -1143,7 +1154,7 @@ function updateTortaSummary() {
   document.getElementById('torta-resumen').innerHTML = [
     { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
     { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
-    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_mod[i])), color: '#4a8a44' },
+    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_opt[i])), color: '#4a8a44' },
     { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
   ].map(c => `
     <div style="text-align:center;padding:.5rem">
