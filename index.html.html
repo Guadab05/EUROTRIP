@@ -1103,7 +1103,7 @@ function renderTorta() {
 
   // Registro real
   const r = REAL[i];
-  const hasReal = r.usd > 0 || r.tarjetas > 0 || r.fijos > 0;
+  const hasReal = r.usd > 0 || r.notas !== '';
   const realSueldo = getSueldo(i) + getExtra(i);
   const realSobrante = realSueldo - (r.tarjetas||0) - (r.fijos||0);
   document.getElementById('torta-registro').innerHTML = `
@@ -1115,28 +1115,16 @@ function renderTorta() {
         </div>
         ${hasReal ? `<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">✦ Registrado</span>` : ''}
       </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:.75rem">
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:.75rem;margin-bottom:.75rem">
         <div class="inp-group">
-          <label>USD que compraste</label>
+          <label>USD que compraste este mes</label>
           <input type="number" placeholder="ej: 200" value="${r.usd||''}"
             onchange="updateReal(${i},'usd',this.value)"
             style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
         </div>
         <div class="inp-group">
-          <label>Tarjetas pagadas (ARS)</label>
-          <input type="number" placeholder="ej: 750000" value="${r.tarjetas||''}"
-            onchange="updateReal(${i},'tarjetas',this.value)"
-            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
-        </div>
-        <div class="inp-group">
-          <label>Gastos fijos reales (ARS)</label>
-          <input type="number" placeholder="ej: 1200000" value="${r.fijos||''}"
-            onchange="updateReal(${i},'fijos',this.value)"
-            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
-        </div>
-        <div class="inp-group">
           <label>Notas del mes</label>
-          <input type="text" placeholder="ej: Pagué el aguinaldo en cuotas" value="${r.notas||''}"
+          <input type="text" placeholder="ej: Compré dólares con parte del aguinaldo, gasté más en salidas..." value="${r.notas||''}"
             onchange="updateReal(${i},'notas',this.value)"
             style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
         </div>
@@ -1144,8 +1132,8 @@ function renderTorta() {
       ${hasReal ? `
       <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:12px;padding:.875rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem">
         <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Gastaste en total</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c47a8a">$${f((r.tarjetas||0)+(r.fijos||0))}</div>
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Gastos del mes</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c47a8a">$${f(realTarjetas+realFijos)}</div>
         </div>
         <div style="text-align:center">
           <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">USD comprados</div>
@@ -1156,10 +1144,8 @@ function renderTorta() {
           <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c9a96e">$${f(Math.max(0,realSobrante-(r.usd||0)*S.tc_mod[i]))}</div>
         </div>
         <div style="text-align:center">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">vs proyectado</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:${(r.tarjetas+r.fijos)<(d.tarjetas+d.fijos)?'#4a8a44':'#c47a8a'}">
-            ${(r.tarjetas+r.fijos)<(d.tarjetas+d.fijos)?'↓ Menos':'↑ Más'} de lo esperado
-          </div>
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Te sobró</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c9a96e">$${f(Math.max(0, realSobrante - (r.usd||0)*S.tc_mod[i]))}</div>
         </div>
       </div>` : ''}
     </div>`;
