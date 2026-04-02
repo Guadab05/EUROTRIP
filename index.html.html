@@ -897,8 +897,7 @@ const getSobrante=i=>Math.max(0,getSueldo(i)+getExtra(i)-(S.visa[i]+S.mc[i]+getF
 const IS_NORMAL=[true,true,true,false,true,true,true,true,false,false,true]; // true=normal month
 const getIdealUSD=(i,tc)=>{
   if(i===0) return 0; // Abril: no ahorro
-  if(IS_EXTRA[i]) return getExtra(i)/tc[i]; // extra months: save the whole bonus
-  return calcMin(tc); // normal months: save the minimum
+  return getSobrante(i)/tc[i]; // ideal = save everything available
 };
 const getAcum=tc=>{let a=S.ahorros;return MONTHS.map((_,i)=>{a+=getSobrante(i)/tc[i];return a;})};
 const calcMin=tc=>{const extras=[3,8,9].reduce((s,i)=>s+getExtra(i)/tc[i],0);return Math.max(0,(S.meta-S.ahorros-extras)/7);}; // 7 = normal months minus April
