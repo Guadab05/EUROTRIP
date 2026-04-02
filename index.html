@@ -445,6 +445,10 @@ details[open] summary::after{content:'−'}
       <div class="col-table"><div class="col-table-header pes-h">Pesimista · ~$2.800</div><div class="table-wrap" style="max-height:380px;overflow-y:auto;border-radius:0 0 14px 14px;border-top:none"><table id="tabla-plan-pes"></table></div></div>
     </div>
   </div>
+  <p style="font-size:11px;color:var(--text-muted);margin-bottom:.75rem">
+    <span style="color:var(--rose-dark)">✦</span> TC real cargado — ese mes usa el dólar real en vez del proyectado.
+    Los meses futuros siguen usando la proyección del escenario.
+  </p>
   <div id="tp-minimo" class="tab-panel">
     <div id="minimo-cols"></div>
   </div>
@@ -935,18 +939,23 @@ function renderPlan(){
     let h='<thead><tr><th>Mes</th><th>Sobrante ARS</th><th class="'+cls[si]+'">TC</th><th class="'+cls[si]+'">Ideal USD</th><th class="'+cls[si]+'">Real USD</th><th class="'+cls[si]+'">Acum USD</th></tr></thead><tbody>';
     MONTHS_LABEL.forEach((m,i)=>{
       const s=getSobrante(i);
-      const idealUSD=getIdealUSD(i,tcs[si]);
+      // Use real TC if available, otherwise use projected
+      const effectiveTc = (REAL[i]&&REAL[i].tc) ? REAL[i].tc : tcs[si][i];
+      const isRealTc = !!(REAL[i]&&REAL[i].tc);
+      const idealUSD=getIdealUSD(i,[...tcs[si].slice(0,i), effectiveTc, ...tcs[si].slice(i+1)]);
       const realUSD=REAL[i]&&REAL[i].usd!==null?REAL[i].usd:null;
       const cumplido=realUSD!==null&&realUSD>=idealUSD-0.01;
       const realColor=realUSD===null?'var(--text-muted)':cumplido?'#4a8a44':'#c47a8a';
       const realText=realUSD===null?'—':fu(realUSD)+(cumplido?' ✓':' ↓');
       const rowCls=IS_EXTRA[i]?'extra':'';
+      const tcDisplay='$'+f(effectiveTc)+(isRealTc?' ✦':'');
+      const tcColor=isRealTc?'color:var(--rose-dark)':'color:var(--text-muted)';
       h+='<tr class="'+rowCls+'">'
         +'<td>'+m+'</td>'
         +'<td>$'+f(s)+'</td>'
-        +'<td class="muted">$'+f(tcs[si][i])+'</td>'
+        +'<td style="'+tcColor+'">'+tcDisplay+'</td>'
         +'<td class="'+cls[si]+'"><b>'+fu(idealUSD)+'</b></td>'
-        +'<td style="color:'+realColor+';font-weight:'+(realUSD?'500':'300')+'">'+realText+'</td>'
+        +'<td style="color:'+realColor+';font-weight:'+(realUSD!==null?'500':'300')+'">'+realText+'</td>'
         +'<td class="'+cls[si]+' big"><b>'+fu(acums[si][i])+'</b></td>'
         +'</tr>';
     });
