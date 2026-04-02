@@ -858,17 +858,17 @@ const S={
 // ─── REGISTRO REAL MES A MES ───
 // Lo que realmente pasó cada mes
 const REAL = {
-  0:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Abril 2026
-  1:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Mayo 2026
-  2:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Junio 2026
-  3:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Julio 2026
-  4:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Agosto 2026
-  5:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Septiembre 2026
-  6:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Octubre 2026
-  7:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Noviembre 2026
-  8:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Diciembre 2026
-  9:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Enero 2027
-  10: { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Febrero 2027
+  0:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Abril 2026
+  1:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Mayo 2026
+  2:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Junio 2026
+  3:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Julio 2026
+  4:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Agosto 2026
+  5:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Septiembre 2026
+  6:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Octubre 2026
+  7:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Noviembre 2026
+  8:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Diciembre 2026
+  9:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Enero 2027
+  10: { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Febrero 2027
 };
 
 function saveReal() {
@@ -884,7 +884,7 @@ function loadReal() {
   } catch(e){}
 }
 function updateReal(idx, field, val) {
-  REAL[idx][field] = field === 'notas' ? val : (+val || 0);
+  REAL[idx][field] = field === 'notas' ? val : (val === '' ? null : +val);
   saveReal();
   updateTortaSummary(); // only update chart + summary, NOT the form inputs
   renderPlan();         // update plan table columns
@@ -922,7 +922,7 @@ function renderPlan(){
     MONTHS_LABEL.forEach((m,i)=>{
       const s=getSobrante(i);
       const idealUSD=getIdealUSD(i,tcs[si]);
-      const realUSD=REAL[i]&&REAL[i].usd>0?REAL[i].usd:null;
+      const realUSD=REAL[i]&&REAL[i].usd!==null?REAL[i].usd:null;
       const cumplido=realUSD!==null&&realUSD>=idealUSD-0.01;
       const realColor=realUSD===null?'var(--text-muted)':cumplido?'#4a8a44':'#c47a8a';
       const realText=realUSD===null?'—':fu(realUSD)+(cumplido?' ✓':' ↓');
@@ -1061,7 +1061,7 @@ function updateTortaSummary() {
   document.getElementById('torta-sueldo-label').textContent =
     'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
 
-  const realUSD = REAL[i] ? REAL[i].usd : 0;
+  const realUSD = (REAL[i] && REAL[i].usd !== null) ? REAL[i].usd : 0;
   const realARS = realUSD * S.tc_mod[i];
   // If real data exists, replace projected ahorro with real
   const ahorroSlice = realUSD > 0
@@ -1142,7 +1142,7 @@ function renderTorta() {
   // Re-render the form inputs (only called when switching months)
   const i = tortaIdx;
   const r = REAL[i] || { usd: 0, notas: '' };
-  const hasReal = r.usd > 0 || r.notas !== '';
+  const hasReal = r.usd !== null || r.notas !== '';
   const formEl = document.getElementById('torta-form');
   if (!formEl) return;
   formEl.innerHTML = `
