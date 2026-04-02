@@ -360,7 +360,7 @@ details[open] summary::after{content:'−'}
 <div id="page-presupuesto" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Presupuesto <em>del viaje</em></h2>
-  <p class="section-desc">Máximo USD 5.000 por persona · Precios reales consultados.</p>
+  <p class="section-desc">Editá cualquier precio — se actualiza en toda la app automáticamente. La meta de ahorro se recalcula sola.</p>
   <div class="ppto-summary" id="ppto-summary"></div>
   <div class="progress-bar"><div class="progress-fill" id="ppto-bar" style="width:0%"></div></div>
   <p style="font-size:12px;color:var(--text-muted);margin-bottom:1.5rem;text-align:right" id="ppto-pct"></p>
@@ -372,7 +372,7 @@ details[open] summary::after{content:'−'}
 <div id="page-vuelos" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Vuelos <em>& Transporte</em></h2>
-  <p class="section-desc">Precios reales consultados marzo 2026. Reservar con anticipación.</p>
+  <p class="section-desc">Los precios se editan desde <b>Presupuesto</b> y se reflejan acá automáticamente.</p>
   <div class="vuelos-list" id="vuelos-list"></div>
   <div class="nota-card" style="margin-top:1rem"><div class="nota-icon">💡</div><div class="nota-text">Mayo = temporada media → mejores precios que verano. Buscar en Google Flights y Skyscanner. Los precios varían — consultar actualizados.</div></div>
 </main>
@@ -382,7 +382,7 @@ details[open] summary::after{content:'−'}
 <div id="page-alojamiento" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Alojamiento <em>Airbnb con cocina</em></h2>
-  <p class="section-desc">Una casa con cocina en cada ciudad — desayunos incluidos, ambiente local, precio justo.</p>
+  <p class="section-desc">Los precios se editan desde <b>Presupuesto</b> y se reflejan acá. El precio por noche se recalcula automáticamente.</p>
   <div class="aloj-grid" id="aloj-grid"></div>
 </main>
 </div>
@@ -606,10 +606,37 @@ const PPTO = {
   ]
 };
 
+function savePpto(){
+  try { localStorage.setItem('europa2027_ppto', JSON.stringify(PPTO)); } catch(e){}
+}
+function loadPpto(){
+  try {
+    const saved = localStorage.getItem('europa2027_ppto');
+    if(saved){
+      const data = JSON.parse(saved);
+      ['vuelos','alojamiento','comida','actividades'].forEach(cat=>{
+        if(data[cat]) data[cat].forEach((r,i)=>{ if(PPTO[cat][i]) PPTO[cat][i].p1=r.p1; });
+      });
+    }
+  } catch(e){}
+}
+function updatePpto(cat,idx,val){
+  PPTO[cat][idx].p1 = +val || 0;
+  savePpto();
+  renderPresupuesto();
+  renderVuelos();
+  renderAlojamiento();
+  renderMustDo();
+  renderScenarios();
+  renderPlan();
+  renderMinimo();
+  renderChart();
+  showSaved();
+}
 function renderPresupuesto(){
-  const cats={Vuelos:PPTO.vuelos,Alojamiento:PPTO.alojamiento,Comida:PPTO.comida,'Actividades y extras':PPTO.actividades};
+  const cats={vuelos:'Vuelos',alojamiento:'Alojamiento',comida:'Comida',actividades:'Actividades y extras'};
   let total=0;
-  Object.values(cats).forEach(c=>c.forEach(r=>total+=r.p1));
+  Object.keys(cats).forEach(c=>PPTO[c].forEach(r=>total+=r.p1));
   const pct=Math.min(100,Math.round(total/5000*100));
   document.getElementById('ppto-summary').innerHTML=`
     <div class="ppto-card"><div class="ppto-label">Total por persona</div><div class="ppto-value accent">${fu(total)}</div></div>
@@ -619,11 +646,23 @@ function renderPresupuesto(){
   document.getElementById('ppto-bar').style.width=pct+'%';
   document.getElementById('ppto-pct').textContent=pct+'% del presupuesto utilizado';
   let html='';
-  Object.entries(cats).forEach(([cat,items])=>{
+  Object.entries(cats).forEach(([catKey,catLabel])=>{
+    const items=PPTO[catKey];
     const subtotal=items.reduce((s,r)=>s+r.p1,0);
-    html+=`<div class="cat-block"><div class="cat-title">${cat} — ${fu(subtotal)}/persona</div>`;
-    items.forEach(r=>{
-      html+=`<div class="cat-row"><span class="cat-item">${r.item}</span><span class="cat-amt">${fu(r.p1)}</span></div>`;
+    html+=`<div class="cat-block"><div class="cat-title">${catLabel} — ${fu(subtotal)}/persona</div>`;
+    items.forEach((r,i)=>{
+      html+=`<div class="cat-row" style="align-items:center">
+        <span class="cat-item">${r.item}</span>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <input
+            type="number"
+            value="${r.p1}"
+            onchange="updatePpto('${catKey}',${i},this.value)"
+            style="width:80px;padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:8px;font-family:'Jost';color:var(--text);background:white;text-align:right"
+          >
+          <span style="font-size:11px;color:var(--text-muted)">USD</span>
+        </div>
+      </div>`;
       if(r.tip) html+=`<div class="tip-box">${r.tip}</div>`;
     });
     html+='</div>';
@@ -645,16 +684,18 @@ const VUELOS=[
 ];
 
 function renderVuelos(){
-  document.getElementById('vuelos-list').innerHTML=VUELOS.map((v,i)=>`
-    <div class="vuelo-card">
+  document.getElementById('vuelos-list').innerHTML=VUELOS.map((v,i)=>{
+    const precio = PPTO.vuelos[i] ? PPTO.vuelos[i].p1 : v.p1;
+    return `<div class="vuelo-card">
       <div class="vuelo-num">${i+1}</div>
       <div><div class="vuelo-ruta">${v.tramo}</div><div class="vuelo-tipo">${v.tipo}</div></div>
       <div class="vuelo-fecha">${v.fecha}</div>
       <div style="text-align:right">
-        <div class="vuelo-precio">${fu(v.p1)}<span style="font-size:11px;color:var(--text-muted)"> /p</span></div>
+        <div class="vuelo-precio">${fu(precio)}<span style="font-size:11px;color:var(--text-muted)"> /p</span></div>
         <span class="vuelo-estado ${v.reservado?'ok':''}">${v.reservado?'✅ Reservado':'⏳ Pendiente'}</span>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ─── ALOJAMIENTO DATA ───
@@ -670,8 +711,10 @@ const ALOJAMIENTOS=[
 ];
 const FLAGS={España:'🇪🇸',Italia:'🇮🇹',Francia:'🇫🇷',Inglaterra:'🇬🇧'};
 function renderAlojamiento(){
-  document.getElementById('aloj-grid').innerHTML=ALOJAMIENTOS.map(a=>`
-    <div class="aloj-card">
+  document.getElementById('aloj-grid').innerHTML=ALOJAMIENTOS.map((a,i)=>{
+    const totalPerson = PPTO.alojamiento[i] ? PPTO.alojamiento[i].p1 : a.noches*a.precio;
+    const perNight = Math.round(totalPerson/a.noches);
+    return `<div class="aloj-card">
       <div class="aloj-header">
         <div class="aloj-ciudad">${FLAGS[a.pais]||''} ${a.ciudad}</div>
         <div class="aloj-fechas">${a.checkin} → ${a.checkout}</div>
@@ -679,11 +722,12 @@ function renderAlojamiento(){
       <div class="aloj-body">
         <div class="aloj-zona">${a.zona}</div>
         <div class="aloj-row"><span class="aloj-lbl">Noches</span><span class="aloj-val">${a.noches}</span></div>
-        <div class="aloj-row"><span class="aloj-lbl">Por persona/noche</span><span class="aloj-val">€${a.precio}</span></div>
-        <div class="aloj-row"><span class="aloj-lbl">Total por persona</span><span class="aloj-val" style="color:var(--rose-dark)">${fu(a.noches*a.precio)}</span></div>
+        <div class="aloj-row"><span class="aloj-lbl">Por persona/noche</span><span class="aloj-val">~U$S ${perNight}</span></div>
+        <div class="aloj-row"><span class="aloj-lbl">Total por persona</span><span class="aloj-val" style="color:var(--rose-dark)">${fu(totalPerson)}</span></div>
         <span class="aloj-estado">⏳ Pendiente</span>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ─── MUST DO DATA ───
@@ -713,7 +757,7 @@ const MUSTDO=[
   {pais:'Francia',nombre:'Musée d\'Orsay',desc:'Impresionismo: Monet, Renoir, Van Gogh. Más manejable que el Louvre.',costo:'$16',reserva:'online',tags:['turismo']},
   {pais:'Francia',nombre:'Jardín de las Tullerías',desc:'Tulipanes en plena primavera. Gratis. Uno de los mejores momentos.',costo:'Gratis',reserva:'no',tags:['gratis']},
   {pais:'Francia',nombre:'Oberkampf + Le Pompon',desc:'El barrio más cool de París para 20-somethings.',costo:'$12',reserva:'no',tags:['noche']},
-  {pais:'Inglaterra',nombre:'🧙‍♀️ Warner Bros Studio Tour',desc:'THE imperdible. Sets reales, Gran Salón, Butterbeer, Hogwarts Express.',costo:'$70',reserva:'oblig',tags:['hp','reservar']},
+  {pais:'Inglaterra',nombre:'🧙‍♀️ Warner Bros Studio Tour',desc:'THE imperdible. Sets reales, Gran Salón, Butterbeer, Hogwarts Express.',costo:'$70',reserva:'oblig',tags:['hp','reservar'],ppto_cat:'actividades',ppto_idx:1},
   {pais:'Inglaterra',nombre:'🧙‍♀️ Platform 9¾ + Tienda HP',desc:'La plataforma mágica + tienda exclusiva. La visita es gratis.',costo:'Gratis',reserva:'no',tags:['hp','gratis']},
   {pais:'Inglaterra',nombre:'🧙‍♀️ Leadenhall Market (Diagon Alley)',desc:'El mercado victoriano filmado como el Callejón Diagon. Gratis.',costo:'Gratis',reserva:'no',tags:['hp','gratis']},
   {pais:'Inglaterra',nombre:'Torre de Londres + joyas',desc:'Historia real de la monarquía inglesa. Impresionante.',costo:'$35',reserva:'online',tags:['turismo','reservar']},
@@ -763,7 +807,7 @@ function renderMustDo(){
       </div>
       <div class="md-desc">${m.desc}</div>
       <div class="md-footer">
-        <span class="md-costo">${m.costo}</span>
+        <span class="md-costo">${m.ppto_cat&&PPTO[m.ppto_cat][m.ppto_idx]?fu(PPTO[m.ppto_cat][m.ppto_idx].p1):m.costo}</span>
         <span class="md-reserva ${resCls}">${resLbl}</span>
         <span class="md-check">${done?'✅':'⬜'}</span>
       </div>
@@ -779,7 +823,7 @@ const IS_EXTRA=[false,false,false,false,true,false,false,false,false,true,true,f
 
 const S={
   sueldo:2200000,aumento:0.18,tc0:1400,ahorros:3500,meta:6000,
-  gastos:{alquiler:600000,expensas:95000,wifi:45000,luz:75000,gas:15000,otros:40000,salidas:200000,boxeo:80000,supermercado:150000},
+  gastos:{alquiler:600000,expensas:95000,wifi:45000,luz:75000,gas:15000,otros:40000,salidas:200000,boxeo:80000,supermercado:60000},
   visa:[121977,309393,196667,196667,0,0,0,0,0,0,0,0],
   mc:[786087,458089,235498,235498,178500,178500,178500,178500,178500,178500,11000,11000],
   tc_opt:[1400,1450,1500,1560,1620,1680,1700,1720,1740,1760,1780,1800],
@@ -861,12 +905,47 @@ function renderInputs(){
   document.getElementById('inputs-main').innerHTML=[
     ['Sueldo base (ARS)','sueldo'],['Aumento semestral (%)','aumento_pct'],
     ['TC actual','tc0'],['Ahorros actuales (USD)','ahorros'],['Meta viaje (USD)','meta'],
+    ['Meta viaje (USD)','meta'],
   ].map(([l,k])=>`<div class="inp-group"><label>${l}</label><input type="number" value="${k==='aumento_pct'?Math.round(S.aumento*100):S[k]}" onchange="updMain('${k}',this.value)"></div>`).join('');
-  document.getElementById('inputs-gastos').innerHTML=Object.entries(S.gastos).map(([k,v])=>`<div class="inp-group"><label>${k.charAt(0).toUpperCase()+k.slice(1)}</label><input type="number" value="${v}" onchange="S.gastos['${k}']=+this.value;renderAhorro()"></div>`).join('');
-  document.getElementById('inputs-tarjetas').innerHTML=`<div class="th"></div><div class="th">VISA (ARS)</div><div class="th">Mastercard (ARS)</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.visa[i]}" onchange="S.visa[${i}]=+this.value;renderAhorro()"><input type="number" value="${S.mc[i]}" onchange="S.mc[${i}]=+this.value;renderAhorro()">`).join('');
-  document.getElementById('inputs-tc').innerHTML=`<div class="th"></div><div class="th" style="color:#4a8a44">Opt</div><div class="th" style="color:#905010">Mod</div><div class="th" style="color:#902020">Pes</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.tc_opt[i]}" onchange="S.tc_opt[${i}]=+this.value;renderAhorro()"><input type="number" value="${S.tc_mod[i]}" onchange="S.tc_mod[${i}]=+this.value;renderAhorro()"><input type="number" value="${S.tc_pes[i]}" onchange="S.tc_pes[${i}]=+this.value;renderAhorro()">`).join('');
+  document.getElementById('inputs-gastos').innerHTML=Object.entries(S.gastos).map(([k,v])=>`<div class="inp-group"><label>${k.charAt(0).toUpperCase()+k.slice(1)}</label><input type="number" value="${v}" onchange="S.gastos['${k}']=+this.value;saveToStorage();renderAhorro()"></div>`).join('');
+  document.getElementById('inputs-tarjetas').innerHTML=`<div class="th"></div><div class="th">VISA (ARS)</div><div class="th">Mastercard (ARS)</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.visa[i]}" onchange="S.visa[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.mc[i]}" onchange="S.mc[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
+  document.getElementById('inputs-tc').innerHTML=`<div class="th"></div><div class="th" style="color:#4a8a44">Opt</div><div class="th" style="color:#905010">Mod</div><div class="th" style="color:#902020">Pes</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.tc_opt[i]}" onchange="S.tc_opt[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_mod[i]}" onchange="S.tc_mod[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_pes[i]}" onchange="S.tc_pes[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
 }
-function updMain(k,v){if(k==='aumento_pct')S.aumento=+v/100;else S[k]=+v;renderAhorro();}
+function saveToStorage(){
+  try {
+    localStorage.setItem('europa2027_state', JSON.stringify({
+      sueldo: S.sueldo,
+      aumento: S.aumento,
+      tc0: S.tc0,
+      ahorros: S.ahorros,
+      meta: S.meta,
+      meta: S.meta,
+      gastos: S.gastos,
+      visa: S.visa,
+      mc: S.mc,
+      tc_opt: S.tc_opt,
+      tc_mod: S.tc_mod,
+      tc_pes: S.tc_pes,
+    }));
+  } catch(e) {}
+}
+
+function loadFromStorage(){
+  try {
+    const saved = localStorage.getItem('europa2027_state');
+    if(saved) {
+      const data = JSON.parse(saved);
+      Object.assign(S, data);
+    }
+  } catch(e) {}
+}
+
+function updMain(k,v){
+  if(k==='aumento_pct') S.aumento=+v/100;
+  else S[k]=+v;
+  saveToStorage();
+  renderAhorro();
+}
 function renderAhorro(){renderScenarios();renderPlan();renderMinimo();renderChart();}
 
 // ─── SCROLL REVEAL ───
@@ -874,6 +953,8 @@ const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersec
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 // ─── INIT ───
+loadFromStorage();
+loadPpto();
 renderItinerario();
 renderPresupuesto();
 renderVuelos();
@@ -881,6 +962,7 @@ renderAlojamiento();
 renderMustDo();
 renderInputs();
 renderAhorro();
+
 </script>
 
 <div id="ios-hint" style="display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:rgba(253,246,240,.95);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:16px;padding:1rem 1.5rem;text-align:center;font-size:13px;color:var(--text-soft);z-index:200;max-width:300px;box-shadow:0 4px 20px rgba(196,122,138,.15)">
@@ -941,5 +1023,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+
+<div id="saved-toast" style="
+  position:fixed;bottom:5rem;right:1.5rem;
+  background:rgba(196,122,138,.9);color:white;
+  padding:.5rem 1.25rem;border-radius:20px;
+  font-family:'Jost';font-size:12px;letter-spacing:.05em;
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;
+">✦ Guardado</div>
 </body>
 </html>
