@@ -254,7 +254,7 @@ details[open] summary::after{content:'−'}
 .tarjetas-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
 .tarjetas-grid .th,.tc-grid .th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);font-weight:500}
 .tarjetas-grid input,.tc-grid input{padding:5px 9px;font-size:12px;border-radius:8px;border:1px solid var(--border);font-family:'Jost';color:var(--text);background:white}
-.tc-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
+.tc-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
 .three-col-tables{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .col-table{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
 .col-table-header{padding:9px 12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
@@ -858,17 +858,17 @@ const S={
 // ─── REGISTRO REAL MES A MES ───
 // Lo que realmente pasó cada mes
 const REAL = {
-  0:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Abril 2026
-  1:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Mayo 2026
-  2:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Junio 2026
-  3:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Julio 2026
-  4:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Agosto 2026
-  5:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Septiembre 2026
-  6:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Octubre 2026
-  7:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Noviembre 2026
-  8:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Diciembre 2026
-  9:  { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Enero 2027
-  10: { usd: null, tarjetas: 0, fijos: 0, notas: '' }, // Febrero 2027
+  0:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Abril 2026
+  1:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Mayo 2026
+  2:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Junio 2026
+  3:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Julio 2026
+  4:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Agosto 2026
+  5:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Septiembre 2026
+  6:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Octubre 2026
+  7:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Noviembre 2026
+  8:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Diciembre 2026
+  9:  { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Enero 2027
+  10: { usd: null, tc: null, tarjetas: 0, fijos: 0, notas: '' }, // Febrero 2027
 };
 
 function saveReal() {
@@ -915,9 +915,17 @@ const calcMin=tc=>{const extras=[3,8,9].reduce((s,i)=>s+getExtra(i)/tc[i],0);ret
 function renderScenarios(){
   const [a,b,c]=[getAcum(S.tc_opt),getAcum(S.tc_mod),getAcum(S.tc_pes)].map(x=>x[10]);
   const badge=v=>v>=S.meta?'Meta alcanzada!':'Falta '+fu(S.meta-v);
+  // Real accumulated: ahorros base + sum of real USD entered
+  const realAcum = S.ahorros + Object.values(REAL).reduce((s,r)=>s+(r.usd!==null?r.usd:0),0);
+  const mesesConDatos = Object.values(REAL).filter(r=>r.usd!==null).length;
   document.getElementById('cards-scenario').innerHTML=[
     ['sc-opt','Optimista · ~$1.800',a],['sc-mod','Moderado · ~$2.200',b],['sc-pes','Pesimista · ~$2.800',c]
-  ].map(([cls,lbl,val])=>`<div class="sc-card ${cls}"><div class="sc-label">${lbl}</div><div class="sc-value">${fu(val)}</div><span class="sc-badge">${badge(val)}</span></div>`).join('');
+  ].map(([cls,lbl,val])=>`<div class="sc-card ${cls}"><div class="sc-label">${lbl}</div><div class="sc-value">${fu(val)}</div><span class="sc-badge">${badge(val)}</span></div>`).join('')
+  + `<div class="sc-card" style="background:var(--blush);border-color:var(--rose-dark)">
+      <div class="sc-label" style="color:var(--rose-dark)">Real acumulado ✦</div>
+      <div class="sc-value" style="color:var(--text)">${fu(realAcum)}</div>
+      <span class="sc-badge" style="background:var(--rose-pale);color:var(--rose-dark)">${mesesConDatos===0?'Sin datos aún':mesesConDatos+(mesesConDatos===1?' mes cargado':' meses cargados')}</span>
+    </div>`;
 }
 function renderPlan(){
   const acums=[getAcum(S.tc_opt),getAcum(S.tc_mod),getAcum(S.tc_pes)];
@@ -996,7 +1004,7 @@ function renderInputs(){
   ].map(([l,k])=>`<div class="inp-group"><label>${l}</label><input type="number" value="${k==='aumento_pct'?Math.round(S.aumento*100):S[k]}" onchange="updMain('${k}',this.value)"></div>`).join('');
   document.getElementById('inputs-gastos').innerHTML=Object.entries(S.gastos).map(([k,v])=>`<div class="inp-group"><label>${k.charAt(0).toUpperCase()+k.slice(1)}</label><input type="number" value="${v}" onchange="S.gastos['${k}']=+this.value;saveToStorage();renderAhorro()"></div>`).join('');
   document.getElementById('inputs-tarjetas').innerHTML=`<div class="th"></div><div class="th">VISA (ARS)</div><div class="th">Mastercard (ARS)</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.visa[i]}" onchange="S.visa[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.mc[i]}" onchange="S.mc[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
-  document.getElementById('inputs-tc').innerHTML=`<div class="th"></div><div class="th" style="color:#4a8a44">Opt</div><div class="th" style="color:#905010">Mod</div><div class="th" style="color:#902020">Pes</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.tc_opt[i]}" onchange="S.tc_opt[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_mod[i]}" onchange="S.tc_mod[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_pes[i]}" onchange="S.tc_pes[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
+  document.getElementById('inputs-tc').innerHTML=`<div class="th"></div><div class="th" style="color:#4a8a44">Opt</div><div class="th" style="color:#905010">Mod</div><div class="th" style="color:#902020">Pes</div><div class="th" style="color:var(--rose-dark)">TC real</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.tc_opt[i]}" onchange="S.tc_opt[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_mod[i]}" onchange="S.tc_mod[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_pes[i]}" onchange="S.tc_pes[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" placeholder="—" value="${REAL[i]&&REAL[i].tc?REAL[i].tc:''}" onchange="updateReal(${i},'tc',this.value)" style="border-color:var(--rose-deep)">`).join('');
 }
 function showSaved(){
   const t = document.getElementById('saved-toast');
@@ -1068,7 +1076,8 @@ function updateTortaSummary() {
     'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
 
   const realUSD = (REAL[i] && REAL[i].usd !== null) ? REAL[i].usd : 0;
-  const realARS = realUSD * S.tc_mod[i];
+  const tcUsed = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
+  const realARS = realUSD * tcUsed;
   // If real data exists, replace projected ahorro with real
   const ahorroSlice = realUSD > 0
     ? { label: 'Ahorro real (USD)', value: realARS, color: '#4a8a44' }
@@ -1117,8 +1126,9 @@ function updateTortaSummary() {
   // Legend
   document.getElementById('torta-legend').innerHTML = slices.map(s => {
     const isAhorro = s.label.includes('Ahorro');
+    const tcForLegend = (REAL[i] && REAL[i].tc) ? REAL[i].tc : S.tc_mod[i];
     const usdLine = isAhorro
-      ? ` = <b style="color:#4a8a44">U$S ${f(s.value/S.tc_mod[i])}</b>`
+      ? ` = <b style="color:#4a8a44">U$S ${f(s.value/tcForLegend)}</b>`
       : '';
     return `<div style="display:flex;align-items:center;gap:.6rem">
       <div style="width:12px;height:12px;border-radius:3px;background:${s.color};flex-shrink:0"></div>
@@ -1133,7 +1143,7 @@ function updateTortaSummary() {
   document.getElementById('torta-resumen').innerHTML = [
     { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
     { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
-    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/S.tc_mod[i]), color: '#4a8a44' },
+    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_mod[i])), color: '#4a8a44' },
     { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
   ].map(c => `
     <div style="text-align:center;padding:.5rem">
