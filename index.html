@@ -879,7 +879,13 @@ function loadReal() {
     const saved = localStorage.getItem('europa2027_real');
     if(saved) {
       const data = JSON.parse(saved);
-      Object.keys(data).forEach(k => { if(REAL[k] !== undefined) Object.assign(REAL[k], data[k]); });
+      Object.keys(data).forEach(k => {
+        if(REAL[k] !== undefined) {
+          Object.assign(REAL[k], data[k]);
+          // treat usd:0 from old saves as null (not entered)
+          if(REAL[k].usd === 0) REAL[k].usd = null;
+        }
+      });
     }
   } catch(e){}
 }
@@ -1065,8 +1071,8 @@ function updateTortaSummary() {
   const realARS = realUSD * S.tc_mod[i];
   // If real data exists, replace projected ahorro with real
   const ahorroSlice = realUSD > 0
-    ? { label: 'Ahorro real', value: realARS, color: '#4a8a44' }
-    : { label: 'Ahorro (mín.)', value: d.ahorroARS, color: '#4a8a44' };
+    ? { label: 'Ahorro real (USD)', value: realARS, color: '#4a8a44' }
+    : { label: 'Ahorro (TC moderado)', value: d.ahorroARS, color: '#4a8a44' };
   const libreReal = realUSD > 0
     ? Math.max(0, d.sueldo - d.tarjetas - d.fijos - realARS)
     : d.libre;
