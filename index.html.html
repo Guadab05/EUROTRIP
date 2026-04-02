@@ -458,6 +458,30 @@ details[open] summary::after{content:'−'}
     </div>
     <div style="position:relative;width:100%;height:320px"><canvas id="chart-acum"></canvas></div>
   </div>
+
+  <div style="margin-top:2rem">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-bottom:.3rem">¿A dónde va tu <em style="color:var(--rose-dark)">sueldo</em>?</h3>
+    <p class="section-desc">Tocá las flechas para navegar mes a mes y ver cómo se distribuye tu ingreso.</p>
+
+    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1.5rem">
+      <button onclick="prevMesTorta()" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;font-size:1.2rem;cursor:pointer;color:var(--rose-dark);display:flex;align-items:center;justify-content:center">←</button>
+      <div style="text-align:center">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--text)" id="torta-mes-label">Marzo 2026</div>
+        <div style="font-size:11px;color:var(--text-muted);letter-spacing:.05em" id="torta-sueldo-label"></div>
+      </div>
+      <button onclick="nextMesTorta()" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;font-size:1.2rem;cursor:pointer;color:var(--rose-dark);display:flex;align-items:center;justify-content:center">→</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:center">
+      <div style="position:relative;width:100%;max-width:280px;margin:0 auto">
+        <canvas id="chart-torta" style="width:100%;height:auto"></canvas>
+      </div>
+      <div id="torta-legend" style="display:flex;flex-direction:column;gap:.6rem"></div>
+    </div>
+
+    <div id="torta-resumen" style="margin-top:1.25rem;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem"></div>
+    <div id="torta-registro" style="margin-top:1rem;background:rgba(255,255,255,.6);border:1px solid var(--border);border-radius:14px;padding:1rem 1.25rem"></div>
+  </div>
 </main>
 </div>
 
@@ -817,24 +841,59 @@ function renderMustDo(){
 }
 
 // ─── AHORRO ───
-const MONTHS=['Mar 26','Abr 26','May 26','Jun 26','Jul 26','Ago 26','Sep 26','Oct 26','Nov 26','Dic 26','Ene 27','Feb 27'];
-const MONTHS_LABEL=['Marzo 2026','Abril 2026','Mayo 2026','Junio 2026','Julio 2026','Agosto 2026','Septiembre 2026','Octubre 2026','Noviembre 2026','Diciembre 2026','Enero 2027','Febrero 2027'];
-const IS_EXTRA=[false,false,false,false,true,false,false,false,false,true,true,false];
+const MONTHS=['Abr 26','May 26','Jun 26','Jul 26','Ago 26','Sep 26','Oct 26','Nov 26','Dic 26','Ene 27','Feb 27'];
+const MONTHS_LABEL=['Abril 2026','Mayo 2026','Junio 2026','Julio 2026','Agosto 2026','Septiembre 2026','Octubre 2026','Noviembre 2026','Diciembre 2026','Enero 2027','Febrero 2027'];
+const IS_EXTRA=[false,false,false,true,false,false,false,false,true,true,false];
 
 const S={
   sueldo:2200000,aumento:0.18,tc0:1400,ahorros:3500,meta:6000,
   gastos:{alquiler:600000,expensas:95000,wifi:45000,luz:75000,gas:15000,otros:40000,salidas:200000,boxeo:80000,supermercado:60000},
-  visa:[121977,309393,196667,196667,0,0,0,0,0,0,0,0],
-  mc:[786087,458089,235498,235498,178500,178500,178500,178500,178500,178500,11000,11000],
+  visa:[121977,309393,196667,196667,0,0,0,0,0,0,0],
+  mc:[786087,458089,235498,235498,178500,178500,178500,178500,178500,11000,11000],
   tc_opt:[1400,1450,1500,1560,1620,1680,1700,1720,1740,1760,1780,1800],
   tc_mod:[1400,1490,1580,1670,1760,1860,1940,2020,2100,2150,2180,2200],
   tc_pes:[1400,1530,1670,1820,1970,2120,2270,2420,2560,2650,2730,2800],
 };
-const getSueldo=i=>i>=10?S.sueldo*(1+S.aumento)**2:i>=4?S.sueldo*(1+S.aumento):S.sueldo;
-const getExtra=i=>i===4||i===9?getSueldo(4)/2:i===10?getSueldo(10)*1.5:0;
-const getAlq=i=>i>=10?S.gastos.alquiler*1.331:i>=7?S.gastos.alquiler*1.21:i>=4?S.gastos.alquiler*1.1:S.gastos.alquiler;
+// ─── REGISTRO REAL MES A MES ───
+// Lo que realmente pasó cada mes
+const REAL = {
+  0:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Abril 2026
+  1:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Mayo 2026
+  2:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Junio 2026
+  3:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Julio 2026
+  4:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Agosto 2026
+  5:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Septiembre 2026
+  6:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Octubre 2026
+  7:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Noviembre 2026
+  8:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Diciembre 2026
+  9:  { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Enero 2027
+  10: { usd: 0, tarjetas: 0, fijos: 0, notas: '' }, // Febrero 2027
+};
+
+function saveReal() {
+  try { localStorage.setItem('europa2027_real', JSON.stringify(REAL)); } catch(e){}
+}
+function loadReal() {
+  try {
+    const saved = localStorage.getItem('europa2027_real');
+    if(saved) {
+      const data = JSON.parse(saved);
+      Object.keys(data).forEach(k => { if(REAL[k] !== undefined) Object.assign(REAL[k], data[k]); });
+    }
+  } catch(e){}
+}
+function updateReal(idx, field, val) {
+  REAL[idx][field] = field === 'notas' ? val : (+val || 0);
+  saveReal();
+  renderTorta();
+  showSaved();
+}
+
+const getSueldo=i=>i>=9?S.sueldo*(1+S.aumento)**2:i>=3?S.sueldo*(1+S.aumento):S.sueldo;
+const getExtra=i=>i===3||i===8?getSueldo(3)/2:i===9?getSueldo(9)*1.5:0;
+const getAlq=i=>i>=9?S.gastos.alquiler*1.331:i>=6?S.gastos.alquiler*1.21:i>=3?S.gastos.alquiler*1.1:S.gastos.alquiler;
 const getFijos=i=>Math.round(getAlq(i))+S.gastos.expensas+S.gastos.wifi+S.gastos.luz+S.gastos.gas+S.gastos.otros+S.gastos.salidas+S.gastos.boxeo+S.gastos.supermercado;
-const getSobrante=i=>i===0?0:Math.max(0,getSueldo(i)+getExtra(i)-(S.visa[i]+S.mc[i]+getFijos(i)));
+const getSobrante=i=>Math.max(0,getSueldo(i)+getExtra(i)-(S.visa[i]+S.mc[i]+getFijos(i)));
 const getAcum=tc=>{let a=S.ahorros;return MONTHS.map((_,i)=>{a+=getSobrante(i)/tc[i];return a;})};
 const calcMin=tc=>{const extras=[4,9,10].reduce((s,i)=>s+getExtra(i)/tc[i],0);return Math.max(0,(S.meta-S.ahorros-extras)/9);};
 
@@ -911,6 +970,13 @@ function renderInputs(){
   document.getElementById('inputs-tarjetas').innerHTML=`<div class="th"></div><div class="th">VISA (ARS)</div><div class="th">Mastercard (ARS)</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.visa[i]}" onchange="S.visa[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.mc[i]}" onchange="S.mc[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
   document.getElementById('inputs-tc').innerHTML=`<div class="th"></div><div class="th" style="color:#4a8a44">Opt</div><div class="th" style="color:#905010">Mod</div><div class="th" style="color:#902020">Pes</div>`+MONTHS_LABEL.map((m,i)=>`<div style="color:var(--text-soft);font-size:12px">${m}</div><input type="number" value="${S.tc_opt[i]}" onchange="S.tc_opt[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_mod[i]}" onchange="S.tc_mod[${i}]=+this.value;saveToStorage();renderAhorro()"><input type="number" value="${S.tc_pes[i]}" onchange="S.tc_pes[${i}]=+this.value;saveToStorage();renderAhorro()">`).join('');
 }
+function showSaved(){
+  const t = document.getElementById('saved-toast');
+  if(!t) return;
+  t.style.opacity='1';
+  clearTimeout(window._saveTimer);
+  window._saveTimer = setTimeout(()=>t.style.opacity='0', 1500);
+}
 function saveToStorage(){
   try {
     localStorage.setItem('europa2027_state', JSON.stringify({
@@ -919,7 +985,6 @@ function saveToStorage(){
       tc0: S.tc0,
       ahorros: S.ahorros,
       meta: S.meta,
-      meta: S.meta,
       gastos: S.gastos,
       visa: S.visa,
       mc: S.mc,
@@ -927,6 +992,7 @@ function saveToStorage(){
       tc_mod: S.tc_mod,
       tc_pes: S.tc_pes,
     }));
+    showSaved();
   } catch(e) {}
 }
 
@@ -946,7 +1012,169 @@ function updMain(k,v){
   saveToStorage();
   renderAhorro();
 }
-function renderAhorro(){renderScenarios();renderPlan();renderMinimo();renderChart();}
+// ─── TORTA ───
+let tortaIdx = 0; // Empezamos en abril — el mes actual
+let tortaInst = null;
+
+function getTortaData(i) {
+  const sueldo = getSueldo(i) + getExtra(i);
+  const tarjetas = S.visa[i] + S.mc[i];
+  const fijos = getFijos(i);
+  const sobrante = Math.max(0, sueldo - tarjetas - fijos);
+
+  // Split sobrante into ahorro (moderado scenario) and libre
+  const tc = S.tc_mod[i];
+  const minUSD = calcMin(S.tc_mod);
+  const ahorroARS = i === 0 ? 0 : Math.min(sobrante, Math.max(0, minUSD * tc));
+  const libre = Math.max(0, sobrante - ahorroARS);
+
+  return { sueldo, tarjetas, fijos, ahorroARS, libre };
+}
+
+function renderTorta() {
+  const i = tortaIdx;
+  const d = getTortaData(i);
+  const extra = getExtra(i);
+
+  document.getElementById('torta-mes-label').textContent = MONTHS_LABEL[i];
+  document.getElementById('torta-sueldo-label').textContent =
+    'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
+
+  const slices = [
+    { label: 'Tarjetas',       value: d.tarjetas,  color: '#e8a0b0' },
+    { label: 'Gastos fijos',   value: d.fijos,     color: '#c47a8a' },
+    { label: 'Ahorro (mín.)',  value: d.ahorroARS, color: '#4a8a44' },
+    { label: 'Libre / extras', value: d.libre,     color: '#c9a96e' },
+  ].filter(s => s.value > 0);
+
+  const data = {
+    labels: slices.map(s => s.label),
+    datasets: [{
+      data: slices.map(s => s.value),
+      backgroundColor: slices.map(s => s.color),
+      borderColor: '#fdf6f0',
+      borderWidth: 3,
+      hoverOffset: 8,
+    }]
+  };
+
+  if (tortaInst) {
+    tortaInst.data = data;
+    tortaInst.update();
+  } else {
+    const canvas = document.getElementById('chart-torta');
+    if (!canvas) return;
+    tortaInst = new Chart(canvas, {
+      type: 'doughnut',
+      data,
+      options: {
+        responsive: true,
+        cutout: '62%',
+        plugins: { legend: { display: false }, tooltip: {
+          callbacks: { label: ctx => ' $' + f(ctx.parsed) + ' (' + Math.round(ctx.parsed/d.sueldo*100) + '%)' }
+        }},
+        animation: { animateRotate: true, duration: 400 }
+      }
+    });
+  }
+
+  // Legend
+  document.getElementById('torta-legend').innerHTML = slices.map(s =>
+    `<div style="display:flex;align-items:center;gap:.6rem">
+      <div style="width:12px;height:12px;border-radius:3px;background:${s.color};flex-shrink:0"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;color:var(--text);font-weight:500">${s.label}</div>
+        <div style="font-size:11px;color:var(--text-muted)">$${f(s.value)} · ${Math.round(s.value/d.sueldo*100)}%</div>
+      </div>
+    </div>`
+  ).join('');
+
+  // Resumen cards
+  document.getElementById('torta-resumen').innerHTML = [
+    { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
+    { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
+    { label: 'Ahorro mínimo',  value: 'U$S '+f(d.ahorroARS/S.tc_mod[i]), color: '#4a8a44' },
+    { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
+  ].map(c => `
+    <div style="text-align:center;padding:.5rem">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">${c.label}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:${c.color};font-weight:400">${c.value}</div>
+    </div>`).join('');
+
+  // Registro real
+  const r = REAL[i];
+  const hasReal = r.usd > 0 || r.tarjetas > 0 || r.fijos > 0;
+  const realSueldo = getSueldo(i) + getExtra(i);
+  const realSobrante = realSueldo - (r.tarjetas||0) - (r.fijos||0);
+  document.getElementById('torta-registro').innerHTML = `
+    <div style="border-top:1px solid var(--border);padding-top:1.25rem;margin-top:.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--text)">Registrá lo <em style="color:var(--rose-dark)">real</em></div>
+          <div style="font-size:12px;color:var(--text-muted)">Lo que realmente pasó este mes — queda guardado</div>
+        </div>
+        ${hasReal ? `<span style="font-size:11px;padding:3px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">✦ Registrado</span>` : ''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;margin-bottom:.75rem">
+        <div class="inp-group">
+          <label>USD que compraste</label>
+          <input type="number" placeholder="ej: 200" value="${r.usd||''}"
+            onchange="updateReal(${i},'usd',this.value)"
+            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+        </div>
+        <div class="inp-group">
+          <label>Tarjetas pagadas (ARS)</label>
+          <input type="number" placeholder="ej: 750000" value="${r.tarjetas||''}"
+            onchange="updateReal(${i},'tarjetas',this.value)"
+            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+        </div>
+        <div class="inp-group">
+          <label>Gastos fijos reales (ARS)</label>
+          <input type="number" placeholder="ej: 1200000" value="${r.fijos||''}"
+            onchange="updateReal(${i},'fijos',this.value)"
+            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+        </div>
+        <div class="inp-group">
+          <label>Notas del mes</label>
+          <input type="text" placeholder="ej: Pagué el aguinaldo en cuotas" value="${r.notas||''}"
+            onchange="updateReal(${i},'notas',this.value)"
+            style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+        </div>
+      </div>
+      ${hasReal ? `
+      <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:12px;padding:.875rem 1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.5rem">
+        <div style="text-align:center">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Gastaste en total</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c47a8a">$${f((r.tarjetas||0)+(r.fijos||0))}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">USD comprados</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#4a8a44">U$S ${f(r.usd)}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">Te sobró</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:#c9a96e">$${f(Math.max(0,realSobrante-(r.usd||0)*S.tc_mod[i]))}</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:3px">vs proyectado</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:${(r.tarjetas+r.fijos)<(d.tarjetas+d.fijos)?'#4a8a44':'#c47a8a'}">
+            ${(r.tarjetas+r.fijos)<(d.tarjetas+d.fijos)?'↓ Menos':'↑ Más'} de lo esperado
+          </div>
+        </div>
+      </div>` : ''}
+    </div>`;
+}
+
+function prevMesTorta() {
+  tortaIdx = (tortaIdx - 1 + MONTHS_LABEL.length) % MONTHS_LABEL.length;
+  renderTorta();
+}
+function nextMesTorta() {
+  tortaIdx = (tortaIdx + 1) % MONTHS_LABEL.length;
+  renderTorta();
+}
+
+function renderAhorro(){renderScenarios();renderPlan();renderMinimo();renderChart();renderTorta();}
 
 // ─── SCROLL REVEAL ───
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
@@ -955,6 +1183,7 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // ─── INIT ───
 loadFromStorage();
 loadPpto();
+loadReal();
 renderItinerario();
 renderPresupuesto();
 renderVuelos();
