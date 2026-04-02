@@ -895,10 +895,10 @@ const getAlq=i=>i>=9?S.gastos.alquiler*1.331:i>=6?S.gastos.alquiler*1.21:i>=3?S.
 const getFijos=i=>Math.round(getAlq(i))+S.gastos.expensas+S.gastos.wifi+S.gastos.luz+S.gastos.gas+S.gastos.otros+S.gastos.salidas+S.gastos.boxeo+S.gastos.supermercado;
 const getSobrante=i=>Math.max(0,getSueldo(i)+getExtra(i)-(S.visa[i]+S.mc[i]+getFijos(i)));
 const getAcum=tc=>{let a=S.ahorros;return MONTHS.map((_,i)=>{a+=getSobrante(i)/tc[i];return a;})};
-const calcMin=tc=>{const extras=[4,9,10].reduce((s,i)=>s+getExtra(i)/tc[i],0);return Math.max(0,(S.meta-S.ahorros-extras)/9);};
+const calcMin=tc=>{const extras=[3,8,9].reduce((s,i)=>s+getExtra(i)/tc[i],0);return Math.max(0,(S.meta-S.ahorros-extras)/9);};
 
 function renderScenarios(){
-  const [a,b,c]=[getAcum(S.tc_opt),getAcum(S.tc_mod),getAcum(S.tc_pes)].map(x=>x[11]);
+  const [a,b,c]=[getAcum(S.tc_opt),getAcum(S.tc_mod),getAcum(S.tc_pes)].map(x=>x[10]);
   const badge=v=>v>=S.meta?'Meta alcanzada!':'Falta '+fu(S.meta-v);
   document.getElementById('cards-scenario').innerHTML=[
     ['sc-opt','Optimista · ~$1.800',a],['sc-mod','Moderado · ~$2.200',b],['sc-pes','Pesimista · ~$2.800',c]
