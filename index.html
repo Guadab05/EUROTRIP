@@ -422,6 +422,7 @@ body.view-mode .view-banner { display:block; }
     <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">ciudades</div></div>
     <div class="stat"><div class="stat-val" id="dias-countdown">—</div><div class="stat-lbl">días que faltan</div></div>
   </div>
+  <div id="hero-reservas" style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center"></div>
 </section>
 <main>
   <div class="divider reveal">· · ✦ · ·</div>
@@ -846,9 +847,31 @@ function showTodoTab(name, btn){
   btn.classList.add('active');
   if(name==='mustdo') renderMustDo();
   if(name==='checklist') renderChecklist();
+renderResumenReservas();
 renderTracker();
 renderConversor();
 fetchRates();
+}
+function renderResumenReservas(){
+  const totalVuelos = VUELOS.length;
+  const resVuelos = Object.values(RES_STATE.vuelos).filter(Boolean).length;
+  const totalAloj = ALOJAMIENTOS.length;
+  const resAloj = Object.values(RES_STATE.alojamiento).filter(Boolean).length;
+  const el = document.getElementById('hero-reservas');
+  if(!el) return;
+  const card = (label, done, total) => {
+    const ok = done === total;
+    const pct = Math.round(done/total*100);
+    return `<div style="background:rgba(255,255,255,.65);backdrop-filter:blur(10px);border:1px solid ${ok?'#a8d5a2':'var(--border)'};border-radius:14px;padding:.75rem 1.25rem;min-width:140px;text-align:center;cursor:pointer" onclick="goPage('${label==='Vuelos'?'vuelos':'alojamiento'}',document.querySelector('.drawer-btn[onclick*=\'${label==='Vuelos'?'vuelos':'alojamiento'}\']'))">
+      <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem">${label}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:${ok?'#2e7d32':'var(--text)'}">${done}/${total}</div>
+      <div style="height:4px;background:var(--blush);border-radius:4px;overflow:hidden;margin-top:.4rem">
+        <div style="height:100%;width:${pct}%;background:${ok?'#4a8a44':'var(--rose-dark)'};border-radius:4px;transition:width .6s ease"></div>
+      </div>
+      <div style="font-size:10px;color:${ok?'#2e7d32':'var(--text-muted)'};margin-top:.3rem">${ok?'✅ Todo reservado':'⏳ '+done+' reservado'+(done!==1?'s':'')}</div>
+    </div>`;
+  };
+  el.innerHTML = card('Vuelos', resVuelos, totalVuelos) + card('Airbnbs', resAloj, totalAloj);
 }
 function showItinTab(name, btn){
   document.querySelectorAll('#page-itinerario .tab-panel').forEach(p=>p.classList.remove('active'));
@@ -885,6 +908,7 @@ function goPage(name,btn){
   if(name==='vuelos') renderVuelos();
   if(name==='alojamiento') renderAlojamiento();
   if(name==='todo'){renderMustDo();renderChecklist();
+renderResumenReservas();
 renderTracker();
 renderConversor();
 fetchRates();}
@@ -1107,7 +1131,9 @@ function renderVuelos(){
       <div class="vuelo-fecha">${v.fecha}</div>
       <div style="text-align:right">
         <div class="vuelo-precio">${fu(precio)}<span style="font-size:11px;color:var(--text-muted)"> /p</span></div>
-        <span class="vuelo-estado ${v.reservado?'ok':''}">${v.reservado?'✅ Reservado':'⏳ Pendiente'}</span>
+        <button onclick="toggleRes('vuelos',${i})" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;${RES_STATE.vuelos[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
+          ${RES_STATE.vuelos[i]?'✅ Reservado':'⏳ Pendiente'}
+        </button>
       </div>
     </div>`;
   }).join('');
@@ -1138,7 +1164,17 @@ function renderAlojamiento(){
         <div class="aloj-row"><span class="aloj-lbl">Noches</span><span class="aloj-val">${a.noches}</span></div>
         <div class="aloj-row"><span class="aloj-lbl">Por persona/noche</span><span class="aloj-val">~U$S ${perNight}</span></div>
         <div class="aloj-row"><span class="aloj-lbl">Total por persona</span><span class="aloj-val" style="color:var(--rose-dark)">${fu(totalPerson)}</span></div>
-        <span class="aloj-estado">⏳ Pendiente</span>
+        <button onclick="toggleRes('alojamiento',${i})" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;margin-bottom:.6rem;${RES_STATE.alojamiento[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
+          ${RES_STATE.alojamiento[i]?'✅ Confirmado':'⏳ Pendiente'}
+        </button>
+        <div style="margin-top:.4rem">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem">Notas / Link</div>
+          <textarea
+            placeholder="Pegá el link, nombre del lugar, precio real, código de reserva..."
+            onchange="updateAlojNota(${i},this.value)"
+            style="width:100%;min-height:70px;resize:vertical;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 10px;font-family:'Jost';font-size:12px;color:var(--text);line-height:1.5"
+          >${ALOJ_NOTAS[i]||''}</textarea>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -1736,10 +1772,50 @@ function loadChecklist(){
     if(d) Object.assign(CL_STATE, JSON.parse(d));
   } catch(e){}
 }
+
+// ─── ESTADO DE RESERVAS ───
+const RES_STATE = {
+  vuelos: {},    // index → true/false
+  alojamiento:{} // index → true/false
+};
+function saveRes(){ try{localStorage.setItem('europa2027_reservas', JSON.stringify(RES_STATE));}catch(e){} }
+
+const ALOJ_NOTAS = {};
+function saveAlojNotas(){ try{localStorage.setItem('europa2027_aloj_notas', JSON.stringify(ALOJ_NOTAS));}catch(e){} }
+function loadAlojNotas(){
+  try{
+    const d = localStorage.getItem('europa2027_aloj_notas');
+    if(d) Object.assign(ALOJ_NOTAS, JSON.parse(d));
+  }catch(e){}
+}
+function updateAlojNota(idx, val){
+  ALOJ_NOTAS[idx] = val;
+  saveAlojNotas();
+  showSaved();
+}
+function loadRes(){
+  try{
+    const d = localStorage.getItem('europa2027_reservas');
+    if(d){
+      const p = JSON.parse(d);
+      if(p.vuelos) Object.assign(RES_STATE.vuelos, p.vuelos);
+      if(p.alojamiento) Object.assign(RES_STATE.alojamiento, p.alojamiento);
+    }
+  }catch(e){}
+}
+function toggleRes(tipo, idx){
+  RES_STATE[tipo][idx] = !RES_STATE[tipo][idx];
+  saveRes();
+  renderVuelos();
+  renderAlojamiento();
+  renderResumenReservas();
+  showSaved();
+}
 function toggleCheck(id){
   CL_STATE[id] = !CL_STATE[id];
   saveChecklist();
   renderChecklist();
+renderResumenReservas();
 renderTracker();
 renderConversor();
 fetchRates();
@@ -2143,6 +2219,8 @@ loadFromStorage();
 loadPpto();
 loadReal();
 loadChecklist();
+loadRes();
+loadAlojNotas();
 loadGastos();
 renderItinerario();
 renderPresupuesto();
@@ -2150,6 +2228,7 @@ renderVuelos();
 renderAlojamiento();
 renderMustDo();
 renderChecklist();
+renderResumenReservas();
 renderTracker();
 renderConversor();
 fetchRates();
