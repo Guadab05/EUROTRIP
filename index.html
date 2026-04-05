@@ -193,7 +193,9 @@ main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 6rem}
   padding:1rem 1.25rem;transition:border-color .2s;cursor:pointer;
 }
 .md-card:hover{border-color:var(--rose-deep)}
-.md-card.done{opacity:.6}
+.md-card.done{opacity:.7}
+.md-card.done .md-name{text-decoration:line-through;color:var(--text-muted)}
+.md-card.done .md-desc{text-decoration:line-through;color:var(--text-muted)}
 .md-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem}
 .md-name{font-weight:500;font-size:14px;color:var(--text);line-height:1.3}
 .md-pais{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--blush);color:var(--rose-dark);white-space:nowrap}
@@ -237,6 +239,12 @@ td{padding:8px 12px;text-align:right;border-bottom:1px solid rgba(196,122,138,.0
 td:first-child{text-align:left;font-weight:500}
 tr:last-child td{border-bottom:none}
 tr.extra td{background:linear-gradient(to right,rgba(242,196,206,.15),transparent)}
+tr.current-month td{background:linear-gradient(to right,rgba(196,122,138,.1),rgba(196,122,138,.03))!important}
+tr.current-month td:first-child::before{content:'▶ ';color:var(--rose-dark);font-size:10px}
+tr.past-month{opacity:.5}
+tr.current-month td{background:linear-gradient(to right,rgba(196,122,138,.12),rgba(196,122,138,.04))!important;font-weight:500}
+tr.current-month td:first-child::before{content:'▶ ';color:var(--rose-dark);font-size:10px}
+tr.past-month td{opacity:.55}
 .opt{color:#3a7034;font-weight:500}.mod{color:#905010;font-weight:500}.pes{color:#902020;font-weight:500}
 .muted{color:var(--text-muted)}.big{font-family:'Cormorant Garamond',serif;font-size:1.1rem}
 
@@ -277,29 +285,107 @@ details[open] summary::after{content:'−'}
 .progress-bar{height:6px;background:var(--blush);border-radius:6px;overflow:hidden;margin:.75rem 0}
 .progress-fill{height:100%;border-radius:6px;background:linear-gradient(to right,var(--rose),var(--rose-dark));transition:width .8s cubic-bezier(.16,1,.3,1)}
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s}
+
+/* HAMBURGER */
+.hamburger{
+  background:none;border:none;cursor:pointer;padding:6px;
+  display:flex;flex-direction:column;gap:5px;
+}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--rose-dark);border-radius:2px;
+  transition:transform .3s,opacity .3s;
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* OVERLAY */
+#drawer-overlay{
+  display:none;position:fixed;inset:0;background:rgba(45,22,48,.35);
+  z-index:199;backdrop-filter:blur(3px);
+  transition:opacity .3s;
+}
+#drawer-overlay.open{display:block}
+
+/* DRAWER */
+#drawer{
+  position:fixed;top:0;right:-300px;bottom:0;width:280px;
+  background:var(--cream);border-left:1px solid var(--border);
+  z-index:200;transition:right .35s cubic-bezier(.16,1,.3,1);
+  display:flex;flex-direction:column;
+  box-shadow:-4px 0 30px rgba(45,22,48,.08);
+}
+#drawer.open{right:0}
+.drawer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);
+}
+.drawer-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--rose-dark)}
+.drawer-close{
+  background:none;border:none;font-size:1.1rem;color:var(--text-muted);
+  cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .2s;
+}
+.drawer-close:hover{background:var(--blush)}
+.drawer-nav{
+  flex:1;overflow-y:auto;padding:1rem .75rem;
+  display:flex;flex-direction:column;gap:.25rem;
+}
+.drawer-btn{
+  display:flex;align-items:center;gap:.875rem;
+  width:100%;padding:.75rem 1rem;border:none;background:none;
+  font-family:'Jost';font-size:15px;font-weight:300;color:var(--text-soft);
+  cursor:pointer;border-radius:12px;transition:all .2s;text-align:left;
+}
+.drawer-btn:hover{background:var(--blush);color:var(--text)}
+.drawer-btn.active{background:var(--blush);color:var(--text);font-weight:500}
+
+.drawer-footer{
+  padding:1.25rem 1.5rem;border-top:1px solid var(--border);
+  text-align:center;
+}
 .reveal.visible{opacity:1;transform:none}
 @media(max-width:700px){.three-col-tables{grid-template-columns:1fr}.vuelo-card{grid-template-columns:auto 1fr;grid-template-rows:auto auto}.nav-links{gap:.1rem}.nav-btn{font-size:11px;padding:4px 10px}}
+
+/* VIEW MODE */
+body.view-mode input, body.view-mode select, body.view-mode textarea { pointer-events:none!important;opacity:.7!important;background:#f5f5f5!important; }
+body.view-mode details summary::after { display:none; }
+body.view-mode details { pointer-events:none; }
+body.view-mode .md-card { cursor:default; }
+body.view-mode #install-btn { display:none!important; }
+.view-banner { display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(196,122,138,.95);color:white;text-align:center;padding:.5rem;font-family:'Jost';font-size:12px;letter-spacing:.05em;z-index:500; }
+body.view-mode .view-banner { display:block; }
 </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-logo">Europa 2027 ✦</div>
-  <div class="nav-links">
-    <button class="nav-btn active" onclick="goPage('inicio',this)">Inicio</button>
-    <button class="nav-btn" onclick="goPage('itinerario',this)">Itinerario</button>
-    <button class="nav-btn" onclick="goPage('presupuesto',this)">Presupuesto</button>
-    <button class="nav-btn" onclick="goPage('vuelos',this)">Vuelos</button>
-    <button class="nav-btn" onclick="goPage('alojamiento',this)">Alojamiento</button>
-    <button class="nav-btn" onclick="goPage('mustdo',this)">Must-Do</button>
-    <button class="nav-btn" onclick="goPage('ahorro',this)">Ahorro</button>
-  </div>
-
-  <button id="install-btn" onclick="installPWA()" style="display:none;align-items:center;gap:6px;padding:5px 14px;border:1px solid var(--rose-deep);background:var(--blush);font-family:'Jost';font-size:12px;color:var(--rose-dark);cursor:pointer;border-radius:20px;transition:all .2s;margin-left:.5rem">
-    <span style="font-size:14px">⬇</span> Instalar app
+  <button class="hamburger" onclick="toggleDrawer()" aria-label="Menú">
+    <span></span><span></span><span></span>
   </button>
-
 </nav>
+
+<div id="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="drawer">
+  <div class="drawer-header">
+    <div class="drawer-logo">Europa 2027 ✦</div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <nav class="drawer-nav">
+    <button class="drawer-btn active" onclick="goPage('inicio',this)">Inicio</button>
+    <button class="drawer-btn" onclick="goPage('itinerario',this)">Itinerario</button>
+    <button class="drawer-btn" onclick="goPage('presupuesto',this)">Presupuesto</button>
+    <button class="drawer-btn" onclick="goPage('vuelos',this)">Vuelos</button>
+    <button class="drawer-btn" onclick="goPage('alojamiento',this)">Alojamiento</button>
+    <button class="drawer-btn" onclick="goPage('todo',this)">To-Do</button>
+    <button class="drawer-btn" onclick="goPage('tracker',this)">Gastos</button>
+    <button class="drawer-btn" onclick="goPage('ahorro',this)">Ahorro</button>
+  </nav>
+  <div class="drawer-footer">
+    <div style="font-size:11px;color:var(--text-muted);letter-spacing:.05em">20 Abr – 19 May 2027 · 30 días 🌸</div>
+  </div>
+</div>
 
 <!-- ════════ INICIO ════════ -->
 <div id="page-inicio" class="page active">
@@ -389,23 +475,99 @@ details[open] summary::after{content:'−'}
 </main>
 </div>
 
-<!-- ════════ MUST DO ════════ -->
-<div id="page-mustdo" class="page">
+<!-- ════════ TO-DO ════════ -->
+<div id="page-todo" class="page">
 <main>
-  <h2 class="section-title" style="margin-top:1.5rem">Must <em>Do</em></h2>
-  <p class="section-desc">Tocá cada tarjeta para marcarla como hecha. Las que necesitan reserva previa están marcadas.</p>
-  <div class="mustdo-filters">
-    <button class="filter-btn active" onclick="filtrarMD('todo',this)">Todo</button>
-    <button class="filter-btn" onclick="filtrarMD('España',this)">España</button>
-    <button class="filter-btn" onclick="filtrarMD('Italia',this)">Italia</button>
-    <button class="filter-btn" onclick="filtrarMD('Francia',this)">Francia</button>
-    <button class="filter-btn" onclick="filtrarMD('Inglaterra',this)">Londres</button>
-    <button class="filter-btn" onclick="filtrarMD('hp',this)">🧙‍♀️ Harry Potter</button>
-    <button class="filter-btn" onclick="filtrarMD('noche',this)">🎉 Noche</button>
-    <button class="filter-btn" onclick="filtrarMD('gratis',this)">Gratis</button>
-    <button class="filter-btn" onclick="filtrarMD('reservar',this)">⚠️ Reservar</button>
+  <h2 class="section-title" style="margin-top:1.5rem">To-<em>Do</em></h2>
+  <p class="section-desc">Todo lo que hay que hacer — antes y durante el viaje.</p>
+
+  <div class="tabs" style="margin-bottom:1.5rem">
+    <button class="tab-btn active" onclick="showTodoTab('mustdo',this)">🎯 Actividades del viaje</button>
+    <button class="tab-btn" onclick="showTodoTab('checklist',this)">✅ Pre-viaje</button>
   </div>
-  <div class="mustdo-grid" id="mustdo-grid"></div>
+
+  <!-- MUST DO TAB -->
+  <div id="todo-mustdo" class="tab-panel active">
+    <div class="mustdo-filters" id="mustdo-filters-inner">
+      <button class="filter-btn active" onclick="filtrarMD('todo',this)">Todo</button>
+      <button class="filter-btn" onclick="filtrarMD('España',this)">España</button>
+      <button class="filter-btn" onclick="filtrarMD('Italia',this)">Italia</button>
+      <button class="filter-btn" onclick="filtrarMD('Francia',this)">Francia</button>
+      <button class="filter-btn" onclick="filtrarMD('Inglaterra',this)">Londres</button>
+      <button class="filter-btn" onclick="filtrarMD('hp',this)">🧙‍♀️ HP</button>
+      <button class="filter-btn" onclick="filtrarMD('noche',this)">🎉 Noche</button>
+      <button class="filter-btn" onclick="filtrarMD('gratis',this)">Gratis</button>
+      <button class="filter-btn" onclick="filtrarMD('reservar',this)">⚠️ Reservar</button>
+    </div>
+    <div class="mustdo-grid" id="mustdo-grid"></div>
+  </div>
+
+  <!-- CHECKLIST TAB -->
+  <div id="todo-checklist" class="tab-panel">
+    <div id="checklist-container"></div>
+  </div>
+
+</main>
+</div>
+
+<!-- ════════ TRACKER ════════ -->
+<div id="page-tracker" class="page">
+<main>
+  <h2 class="section-title" style="margin-top:1.5rem">Tracker de <em>gastos</em></h2>
+  <p class="section-desc">Registrá lo que gastás cada día. La app te avisa si te estás pasando del presupuesto.</p>
+
+  <!-- RESUMEN -->
+  <div class="metric-grid" id="tracker-resumen"></div>
+  <div style="height:6px;background:var(--blush);border-radius:6px;overflow:hidden;margin-bottom:.4rem">
+    <div id="tracker-bar" style="height:100%;width:0%;border-radius:6px;background:linear-gradient(to right,var(--rose),var(--rose-dark));transition:width .8s cubic-bezier(.16,1,.3,1)"></div>
+  </div>
+  <p id="tracker-pct" style="font-size:12px;color:var(--text-muted);margin-bottom:1.5rem;text-align:right"></p>
+
+  <!-- ADD GASTO -->
+  <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:20px;padding:1.25rem 1.5rem;margin-bottom:1.5rem">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">Agregar <em style="color:var(--rose-dark)">gasto</em></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.75rem;margin-bottom:.75rem">
+      <div class="inp-group">
+        <label>Día del viaje</label>
+        <select id="tr-dia" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+          <option value="">— Elegí un día —</option>
+        </select>
+      </div>
+      <div class="inp-group">
+        <label>Categoría</label>
+        <select id="tr-cat" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+          <option value="comida">🍕 Comida</option>
+          <option value="transporte">🚆 Transporte</option>
+          <option value="entradas">🏛 Entradas</option>
+          <option value="alojamiento">🏨 Alojamiento</option>
+          <option value="shopping">🛍 Shopping</option>
+          <option value="noche">🎉 Vida nocturna</option>
+          <option value="varios">📦 Varios</option>
+        </select>
+      </div>
+      <div class="inp-group">
+        <label>Monto (USD)</label>
+        <input type="number" id="tr-monto" placeholder="ej: 25" min="0" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+      </div>
+      <div class="inp-group">
+        <label>Descripción</label>
+        <input type="text" id="tr-desc" placeholder="ej: Entrada Coliseo" style="background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%">
+      </div>
+    </div>
+    <button onclick="addGasto()" style="width:100%;padding:.7rem;background:var(--rose-dark);color:white;border:none;border-radius:12px;font-family:'Jost';font-size:14px;cursor:pointer;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">+ Agregar gasto</button>
+  </div>
+
+  <!-- FILTROS POR CIUDAD -->
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem" id="tracker-city-filters"></div>
+
+  <!-- LISTA DE GASTOS -->
+  <div id="tracker-lista"></div>
+
+  <!-- GRAFICO POR CATEGORIA -->
+  <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:20px;padding:1.5rem;margin-top:1.5rem">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:1rem">Por <em style="color:var(--rose-dark)">categoría</em></div>
+    <div id="tracker-cats"></div>
+  </div>
 </main>
 </div>
 
@@ -498,12 +660,45 @@ const f  = n => new Intl.NumberFormat('es-AR').format(Math.round(n));
 const fu = n => 'U$S '+new Intl.NumberFormat('es-AR',{maximumFractionDigits:0}).format(Math.round(n));
 
 // ─── NAV ───
+function showTodoTab(name, btn){
+  document.querySelectorAll('#page-todo .tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#page-todo .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('todo-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='mustdo') renderMustDo();
+  if(name==='checklist') renderChecklist();
+renderTracker();
+}
+function toggleDrawer(){
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+  const ham = document.querySelector('.hamburger');
+  const isOpen = drawer.classList.contains('open');
+  drawer.classList.toggle('open');
+  overlay.classList.toggle('open');
+  ham.classList.toggle('open');
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.querySelector('.hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
 function goPage(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.drawer-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
   window.scrollTo(0,0);
+  closeDrawer();
+  if(name==='itinerario') renderItinerario();
+  if(name==='presupuesto'){loadPpto();renderPresupuesto();}
+  if(name==='vuelos') renderVuelos();
+  if(name==='alojamiento') renderAlojamiento();
+  if(name==='todo'){renderMustDo();renderChecklist();
+renderTracker();}
+  if(name==='tracker') renderTracker();
 }
 function showTab(name,btn){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
@@ -556,7 +751,7 @@ const ITINERARIO = [
   {dia:24,fecha:'13-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'British Museum (gratis). Covent Garden. Tate Modern. NOCHE: Shoreditch — Boxpark → XOYO o Village Underground.',aloj:'Airbnb Shoreditch / Hackney',tip:'XOYO y Village Underground: los mejores clubs de Londres. Beer gardens ya abiertos en mayo.'},
   {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🎉 Día libre',noche:true,desc:'Buckingham Palace, Portobello Road Market (vintage) o excursión a Oxford. NOCHE: pub crawl por el Soho.',aloj:'Airbnb Shoreditch / Hackney',tip:'Portobello Market: sábados. Oxford: 1:30 hs en tren desde Paddington. Pub crawl: la experiencia más inglesa.'},
   {dia:26,fecha:'15-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🏛 Excursión Oxford',desc:'Excursión a Oxford (1:30 hs en tren desde Paddington). Universidad medieval, Bodleian Library, Christ Church — filmada como Hogwarts. Una de las ciudades más hermosas de Inglaterra.',aloj:'Airbnb Shoreditch / Hackney',tip:'Tren desde Paddington ~£15. Vale el día entero. Volver a la tarde para cenar en Shoreditch.'},
-  {dia:27,fecha:'16-May',pais:'España',ciudad:'Barcelona',tipo:'🚆 Traslado + Shopping',vuelo:true,desc:'AVE Madrid→Barcelona (2:30 hs) o vuelo (~45 min). Tarde: El Corte Inglés Diagonal, Passeig de Gràcia.',aloj:'Airbnb Eixample / Poblenou',tip:'AVE Renfe: renfe.com desde ~€30. Poblenou: muy de moda entre jóvenes, cerca de las playas.'},
+  {dia:27,fecha:'16-May',pais:'España',ciudad:'Barcelona',tipo:'🚆 Traslado + Shopping',vuelo:true,desc:'Vuelo Londres→Barcelona (2:30 hs). Tarde: El Corte Inglés Diagonal, Passeig de Gràcia.',aloj:'Airbnb Eixample / Poblenou',tip:'Vueling/Iberia LHR→BCN desde ~€55. Poblenou: muy de moda entre jóvenes, cerca de las playas.'},
   {dia:28,fecha:'17-May',pais:'España',ciudad:'Barcelona',tipo:'🌊 Playa + Shopping + Fiesta',noche:true,desc:'Mañana: playa Bogatell (~20°C en mayo). Aperitivo en chiringuito. Tarde: últimas compras en El Born. NOCHE: Opium o La Terrrazza.',aloj:'Airbnb Eixample / Poblenou',tip:'La Terrrazza: al aire libre bajo las estrellas frente al mar. Opium: frente a la playa, perfecto para despedir el viaje.'},
   {dia:29,fecha:'18-May',pais:'España',ciudad:'Barcelona',tipo:'🛍 Último día + Tax Free',desc:'Últimas compras: El Born, souvenirs. Tramitar Tax Free en el aeropuerto El Prat. Cena de despedida.',aloj:'Airbnb Eixample / Poblenou',tip:'Tax Free BCN: mostrador cerca de los controles T1. Recuperan hasta 21% IVA de todas las compras en España.'},
   {dia:30,fecha:'19-May',pais:'✈ Vuelo',ciudad:'Barcelona → Buenos Aires',tipo:'✈ Vuelo BCN→EZE',vuelo:true,desc:'Vuelo de regreso BCN→EZE (12–14 hs con escala). 30 días de Europa en el cuerpo, la valija llena y el corazón más lleno todavía. ¡Hasta la próxima Europa!',aloj:'En avión ✈',tip:'Si el vuelo sale la tarde/noche del 19-May, la llegada a EZE es el 20-May.'},
@@ -757,40 +952,68 @@ function renderAlojamiento(){
 
 // ─── MUST DO DATA ───
 const MUSTDO=[
-  {pais:'España',nombre:'Sagrada Família',desc:'Obra maestra de Gaudí. Interior y torres imprescindibles.',costo:'$26',reserva:'online',tags:['turismo']},
-  {pais:'España',nombre:'Park Güell',desc:'Jardines de mosaicos de Gaudí. Vistas panorámicas de BCN.',costo:'$10',reserva:'online',tags:['turismo']},
+  {pais:'España',nombre:'Sagrada Família',link:'https://sagradafamilia.org/en/tickets',desc:'Obra maestra de Gaudí. Interior y torres imprescindibles.',costo:'$26',reserva:'online',tags:['turismo']},
+  {pais:'España',nombre:'Park Güell',link:'https://parkguell.barcelona/en/plan-your-visit/tickets',desc:'Jardines de mosaicos de Gaudí. Vistas panorámicas de BCN.',costo:'$10',reserva:'online',tags:['turismo']},
   {pais:'España',nombre:'Playa Barceloneta / Bogatell',desc:'Mayo en BCN: ~22°C, agua a ~20°C. Bogatell más tranquila.',costo:'Gratis',reserva:'no',tags:['gratis']},
-  {pais:'España',nombre:'Sala Apolo / Razzmatazz',desc:'Razzmatazz: 5 salas, el mejor club de España. La Terrrazza al aire libre en mayo.',costo:'$12',reserva:'no',tags:['noche']},
-  {pais:'Italia',nombre:'Coliseo + Foro Romano',desc:'La Roma antigua. RESERVA OBLIGATORIA.',costo:'$18',reserva:'oblig',tags:['turismo','reservar']},
-  {pais:'Italia',nombre:'Museos Vaticanos + Sixtina',desc:'Miguel Ángel. Ir temprano. Sin reserva = 2–3 hs de fila.',costo:'$20',reserva:'oblig',tags:['turismo','reservar']},
-  {pais:'Italia',nombre:'Galería Borghese',desc:'Arte renacentista. Cupo muy limitado. Increíble.',costo:'$20',reserva:'oblig',tags:['turismo','reservar']},
+  {pais:'España',nombre:'Sala Apolo / Razzmatazz',link:'https://www.sala-apolo.com',desc:'Razzmatazz: 5 salas, el mejor club de España. La Terrrazza al aire libre en mayo.',costo:'$12',reserva:'no',tags:['noche']},
+  {pais:'Italia',nombre:'Coliseo + Foro Romano',link:'https://www.coopculture.it/en/colosseo-e-shop.cfm',desc:'La Roma antigua. RESERVA OBLIGATORIA.',costo:'$18',reserva:'oblig',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'Museos Vaticanos + Sixtina',link:'https://tickets.museivaticani.va',desc:'Miguel Ángel. Ir temprano. Sin reserva = 2–3 hs de fila.',costo:'$20',reserva:'oblig',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'Galería Borghese',link:'https://galleriaborghese.beniculturali.it/en/visit/book-a-visit/',desc:'Arte renacentista. Cupo muy limitado. Increíble.',costo:'$20',reserva:'oblig',tags:['turismo','reservar']},
   {pais:'Italia',nombre:'Fontana di Trevi al amanecer',desc:'Ir antes de las 8am — la única forma de verla sin multitudes.',costo:'Gratis',reserva:'no',tags:['gratis']},
   {pais:'Italia',nombre:'Jardín de los Naranjos',desc:'Vista secreta de Roma entre naranjos en flor. 100% gratis y sin turistas.',costo:'Gratis',reserva:'no',tags:['gratis']},
-  {pais:'Italia',nombre:'Freni e Frizioni — aperitivo',desc:'Bar aperitivo icónico en el Trastevere. Jardín exterior, bufet con la copa.',costo:'$8',reserva:'no',tags:['noche']},
+  {pais:'Italia',nombre:'Freni e Frizioni — aperitivo',link:'https://maps.app.goo.gl/frenifrizioni',desc:'Bar aperitivo icónico en el Trastevere. Jardín exterior, bufet con la copa.',costo:'$8',reserva:'no',tags:['noche']},
   {pais:'Italia',nombre:'Pigneto de noche',desc:'El barrio más auténtico y joven de Roma. Bares con música en vivo, cero turistas.',costo:'$8',reserva:'no',tags:['noche']},
-  {pais:'Italia',nombre:'Galería Uffizi — Botticelli',desc:'La Primavera de Botticelli en mayo = una experiencia única.',costo:'$25',reserva:'online',tags:['turismo','reservar']},
-  {pais:'Italia',nombre:'El David — Academia',desc:'La escultura más famosa del mundo. Impresionante en persona.',costo:'$16',reserva:'online',tags:['turismo','reservar']},
-  {pais:'Italia',nombre:'Cúpula de Brunelleschi',desc:'Subir la cúpula del Duomo. Vistas increíbles de Florencia.',costo:'$20',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'Galería Uffizi — Botticelli',link:'https://www.uffizi.it/en/the-uffizi/tickets',desc:'La Primavera de Botticelli en mayo = una experiencia única.',costo:'$25',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'El David — Academia',link:'https://www.b-ticket.com/b-ticket/shop/basket.aspx',desc:'La escultura más famosa del mundo. Impresionante en persona.',costo:'$16',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'Cúpula de Brunelleschi',link:'https://www.museumflorence.com/en/tickets.html',desc:'Subir la cúpula del Duomo. Vistas increíbles de Florencia.',costo:'$20',reserva:'online',tags:['turismo','reservar']},
   {pais:'Italia',nombre:'Piazzale Michelangelo',desc:'Vista panorámica de Florencia al atardecer. Completamente gratis.',costo:'Gratis',reserva:'no',tags:['gratis']},
   {pais:'Italia',nombre:'Santo Spirito + Full Up Club',desc:'Aperitivo en la piazza más animada de Florencia. Full Up para bailar.',costo:'$8',reserva:'no',tags:['noche']},
   {pais:'Italia',nombre:'Palacio Ducal + San Marcos',desc:'El corazón de Venecia. La Basílica en mayo: sin colas enormes.',costo:'$15',reserva:'online',tags:['turismo']},
   {pais:'Italia',nombre:'Góndola por los canales',desc:'Paseo clásico. ~€90/30 min por góndola completa.',costo:'$45',reserva:'no',tags:['turismo']},
   {pais:'Italia',nombre:'Murano y Burano',desc:'Las islas más fotogénicas de Italia. Burano en mayo: flores en las ventanas.',costo:'Gratis',reserva:'no',tags:['gratis']},
-  {pais:'Italia',nombre:'Bacaro Jazz + cicchetti',desc:'El bar más icónico de Venecia. Cicchetti + ombra de vino.',costo:'$10',reserva:'no',tags:['noche']},
-  {pais:'Francia',nombre:'Torre Eiffel',desc:'Subida al 2do/3er piso. Mayo: la Torre con cielo azul de primavera.',costo:'$28',reserva:'online',tags:['turismo','reservar']},
-  {pais:'Francia',nombre:'Museo del Louvre',desc:'La Gioconda, Venus de Milo. Reservar obligatorio.',costo:'$22',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Italia',nombre:'Bacaro Jazz + cicchetti',link:'https://maps.app.goo.gl/bacarojazz',desc:'El bar más icónico de Venecia. Cicchetti + ombra de vino.',costo:'$10',reserva:'no',tags:['noche']},
+  {pais:'Francia',nombre:'Torre Eiffel',link:'https://ticket.toureiffel.paris/en',desc:'Subida al 2do/3er piso. Mayo: la Torre con cielo azul de primavera.',costo:'$28',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Francia',nombre:'Museo del Louvre',link:'https://www.ticketlouvre.fr/louvre/b2c/index.cfm',desc:'La Gioconda, Venus de Milo. Reservar obligatorio.',costo:'$22',reserva:'online',tags:['turismo','reservar']},
   {pais:'Francia',nombre:'Musée d\'Orsay',desc:'Impresionismo: Monet, Renoir, Van Gogh. Más manejable que el Louvre.',costo:'$16',reserva:'online',tags:['turismo']},
   {pais:'Francia',nombre:'Jardín de las Tullerías',desc:'Tulipanes en plena primavera. Gratis. Uno de los mejores momentos.',costo:'Gratis',reserva:'no',tags:['gratis']},
   {pais:'Francia',nombre:'Oberkampf + Le Pompon',desc:'El barrio más cool de París para 20-somethings.',costo:'$12',reserva:'no',tags:['noche']},
-  {pais:'Inglaterra',nombre:'🧙‍♀️ Warner Bros Studio Tour',desc:'THE imperdible. Sets reales, Gran Salón, Butterbeer, Hogwarts Express.',costo:'$70',reserva:'oblig',tags:['hp','reservar'],ppto_cat:'actividades',ppto_idx:1},
+  {pais:'Inglaterra',nombre:'🧙‍♀️ Warner Bros Studio Tour',link:'https://www.wbstudiotour.co.uk/tickets/',desc:'THE imperdible. Sets reales, Gran Salón, Butterbeer, Hogwarts Express.',costo:'$70',reserva:'oblig',tags:['hp','reservar'],ppto_cat:'actividades',ppto_idx:1},
   {pais:'Inglaterra',nombre:'🧙‍♀️ Platform 9¾ + Tienda HP',desc:'La plataforma mágica + tienda exclusiva. La visita es gratis.',costo:'Gratis',reserva:'no',tags:['hp','gratis']},
   {pais:'Inglaterra',nombre:'🧙‍♀️ Leadenhall Market (Diagon Alley)',desc:'El mercado victoriano filmado como el Callejón Diagon. Gratis.',costo:'Gratis',reserva:'no',tags:['hp','gratis']},
-  {pais:'Inglaterra',nombre:'Torre de Londres + joyas',desc:'Historia real de la monarquía inglesa. Impresionante.',costo:'$35',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Inglaterra',nombre:'Torre de Londres + joyas',link:'https://www.hrp.org.uk/tower-of-london/visit/tickets/',desc:'Historia real de la monarquía inglesa. Impresionante.',costo:'$35',reserva:'online',tags:['turismo','reservar']},
   {pais:'Inglaterra',nombre:'British Museum',desc:'Piedra Rosetta, momias egipcias. ENTRADA GRATUITA.',costo:'Gratis',reserva:'no',tags:['gratis']},
-  {pais:'Inglaterra',nombre:'Musical West End',desc:'Hamilton, Mamma Mia, Chicago… Una obra imperdible en Londres.',costo:'$70',reserva:'online',tags:['turismo','reservar']},
+  {pais:'Inglaterra',nombre:'Musical West End',link:'https://www.todaytix.com/london',desc:'Hamilton, Mamma Mia, Chicago… Una obra imperdible en Londres.',costo:'$70',reserva:'online',tags:['turismo','reservar']},
   {pais:'Inglaterra',nombre:'Shoreditch + XOYO / Village Underground',desc:'El barrio más cool de Londres. Los mejores clubs para música alternativa.',costo:'$15',reserva:'no',tags:['noche']},
   {pais:'Inglaterra',nombre:'Beer gardens en mayo',desc:'La experiencia más inglesa. Pubs con jardines abiertos en mayo.',costo:'$10',reserva:'no',tags:['noche']},
   {pais:'España',nombre:'Opium / La Terrrazza BCN',desc:'Despedida del viaje: La Terrrazza al aire libre bajo las estrellas frente al mar.',costo:'$15',reserva:'no',tags:['noche']},
+  // Barcelona extras
+  {pais:'España',nombre:'Passeig de Gràcia',desc:'La avenida más elegante de Barcelona. Casas de Gaudí: Casa Batlló y Casa Milà. Vidrierías, moda, ambiente.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://maps.app.goo.gl/passeig'},
+  {pais:'España',nombre:'La Boqueria',desc:'El mercado más famoso de Barcelona. Frutas tropicales, jamón, mariscos, zumos. Mejor ir temprano.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.boqueria.barcelona/'},
+  {pais:'España',nombre:'Palau de la Música Catalana',desc:'Obra maestra del modernismo catalán. Interior de colores increíbles. Visita guiada o concierto.',costo:'$18',reserva:'online',tags:['turismo'],link:'https://www.palaumusica.cat/en/tickets_6754'},
+  // Roma extras
+  {pais:'Italia',nombre:"Castel Sant'Angelo",desc:"Fortaleza romana convertida en castillo papal. Vistas panorámicas del Tíber y del Vaticano desde la terraza.",costo:'$15',reserva:'no',tags:['turismo'],link:'https://www.castelsantangelo.com/'},
+  {pais:'Italia',nombre:'Mercado de Testaccio',desc:'El mercado más auténtico de Roma. Gastronomía romana real: offelle, suppli, fritti. Sin turistas.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://maps.app.goo.gl/testaccio'},
+  {pais:'Italia',nombre:'Circo Massimo',desc:'El hipódromo más grande de la antigüedad. Vista impresionante y completamente gratis. Al lado del Aventino.',costo:'Gratis',reserva:'no',tags:['turismo','gratis']},
+  // Florencia extras
+  {pais:'Italia',nombre:'Mercado Central San Lorenzo',desc:'Mercado cubierto de dos pisos. Abajo: carnes, quesos, pasta. Arriba: restaurante y street food increíble.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.mercatocentrale.it/firenze/'},
+  {pais:'Italia',nombre:'Jardines de Boboli',desc:'Jardines renacentistas detrás del Palacio Pitti. En mayo: flores increíbles y vistas de Florencia. Imperdible.',costo:'$12',reserva:'no',tags:['turismo'],link:'https://www.uffizi.it/en/boboli-garden'},
+  {pais:'Italia',nombre:'Giardino Bardini',desc:'El jardín secreto más bello de Florencia. Wisteria en mayo. Vistas panorámicas sin turistas. Completamente único.',costo:'$6',reserva:'no',tags:['turismo','gratis'],link:'https://www.bardinipeyron.it/'},
+  {pais:'Italia',nombre:'Mercado pulgas Piazza dei Ciompi',desc:'Mercado de pulgas vintage en el Oltrarno. Ropa, discos, antigüedades. El más auténtico de Florencia.',costo:'Gratis',reserva:'no',tags:['turismo','gratis']},
+  // Venecia extras
+  {pais:'Italia',nombre:'Mercado de Rialto',desc:'El mercado más antiguo de Venecia. Mariscos, verduras, especias. Ir temprano — los locales lo usan desde el alba.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://maps.app.goo.gl/rialto'},
+  // Paris extras
+  {pais:'Francia',nombre:'Sacré-Cœur y Montmartre',desc:'La basílica blanca en lo alto de París. Barrio de artistas, callejitas, vistas espectaculares. Completamente gratis.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.sacre-coeur-montmartre.com/'},
+  {pais:'Francia',nombre:'Campos Elíseos + Arco del Triunfo',desc:'La avenida más famosa del mundo. Subir al Arco del Triunfo para vistas de París en mayo con sol.',costo:'$15',reserva:'no',tags:['turismo'],link:'https://www.paris-arc-de-triomphe.fr/en'},
+  // Londres extras
+  {pais:'Inglaterra',nombre:'Borough Market',desc:'El mercado gourmet más famoso de Londres. Street food del mundo, quesos, charcutería. Junto al Tate Modern.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://boroughmarket.org.uk/'},
+  {pais:'Inglaterra',nombre:'Camden Town',desc:'El mercado alternativo de Londres. Ropa vintage, comida del mundo, tatuajes, música. Ambiente increíble en mayo al aire libre.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.camdenmarket.com/'},
+  {pais:'Inglaterra',nombre:'Portobello Road Market',desc:'El mercado vintage más famoso del mundo. Antigüedades, ropa, discos. Solo los sábados — planificarlo bien.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.portobelloroad.co.uk/'},
+  {pais:'Inglaterra',nombre:'Covent Garden',desc:'Piazza con artistas callejeros, tiendas independientes, restaurantes. The Londoner vibe en su máxima expresión.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.coventgarden.london/'},
+  {pais:'Inglaterra',nombre:'Tate Modern + Millennium Bridge',desc:'El museo de arte moderno más visitado del mundo. Gratis. Cruzar el Millennium Bridge con vistas de St Paul.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.tate.org.uk/visit/tate-modern'},
+  {pais:'Inglaterra',nombre:'Buckingham Palace + cambio de guardia',desc:'El cambio de guardia es un espectáculo gratuito e icónico. Confirmar horarios antes — no todos los días.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.rct.uk/visit/the-state-rooms-buckingham-palace'},
+  {pais:'Inglaterra',nombre:'Notting Hill',desc:'El barrio más pintoresco de Londres. Casas de colores pastel, cafés con encanto, ambiente tranquilo y fotogénico.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://maps.app.goo.gl/nottinghill'},
+  {pais:'Inglaterra',nombre:'Excursión a Oxford',desc:'La universidad más antigua del mundo. Christ Church (filmada como Hogwarts), Bodleian Library, callejitas medievales. Vale el día entero.',costo:'$20',reserva:'no',tags:['turismo','hp'],link:'https://www.experienceoxfordshire.org/'},
+  {pais:'Inglaterra',nombre:'Hyde Park en mayo',desc:'El parque más grande de Londres en plena primavera. Flores, Serpentine Gallery, remar en el lago. Completamente gratis.',costo:'Gratis',reserva:'no',tags:['turismo','gratis'],link:'https://www.royalparks.org.uk/parks/hyde-park'},
 ];
 
 let mdEstados = {};
@@ -829,7 +1052,10 @@ function renderMustDo(){
       <div class="md-footer">
         <span class="md-costo">${m.ppto_cat&&PPTO[m.ppto_cat][m.ppto_idx]?fu(PPTO[m.ppto_cat][m.ppto_idx].p1):m.costo}</span>
         <span class="md-reserva ${resCls}">${resLbl}</span>
-        <span class="md-check">${done?'✅':'⬜'}</span>
+        <div style="display:flex;align-items:center;gap:.4rem">
+          ${m.link&&!done?`<a href="${m.link}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--blush);color:var(--rose-dark);text-decoration:none;border:1px solid var(--border)">🔗 Reservar</a>`:''}
+          <span class="md-check">${done?'✅':'⬜'}</span>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -840,6 +1066,18 @@ function renderMustDo(){
 const MONTHS=['Abr 26','May 26','Jun 26','Jul 26','Ago 26','Sep 26','Oct 26','Nov 26','Dic 26','Ene 27','Feb 27'];
 const MONTHS_LABEL=['Abril 2026','Mayo 2026','Junio 2026','Julio 2026','Agosto 2026','Septiembre 2026','Octubre 2026','Noviembre 2026','Diciembre 2026','Enero 2027','Febrero 2027'];
 const IS_EXTRA=[false,false,false,true,false,false,false,false,true,true,false];
+const MONTH_DATES=[
+  new Date(2026,3,1),new Date(2026,4,1),new Date(2026,5,1),new Date(2026,6,1),
+  new Date(2026,7,1),new Date(2026,8,1),new Date(2026,9,1),new Date(2026,10,1),
+  new Date(2026,11,1),new Date(2027,0,1),new Date(2027,1,1)
+];
+function getCurrentMonthIdx(){
+  const now=new Date();
+  let idx=0;
+  for(let i=0;i<MONTH_DATES.length;i++){ if(now>=MONTH_DATES[i]) idx=i; }
+  return idx;
+}
+const CURRENT_MONTH=getCurrentMonthIdx();
 
 const S={
   sueldo:2200000,aumento:0.18,tc0:1400,ahorros:3500,meta:6000,
@@ -938,7 +1176,9 @@ function renderPlan(){
       const cumplido=realUSD!==null&&realUSD>=idealUSD-0.01;
       const realColor=realUSD===null?'var(--text-muted)':cumplido?'#4a8a44':'#c47a8a';
       const realText=realUSD===null?'—':fu(realUSD)+(cumplido?' ✓':' ↓');
-      const rowCls=IS_EXTRA[i]?'extra':'';
+      const isCurrent = i === CURRENT_MONTH;
+      const isPast = i < CURRENT_MONTH;
+      const rowCls=(IS_EXTRA[i]?'extra':'')+(isCurrent?' current-month':'')+(isPast?' past-month':'');
       const tcDisplay='$'+f(effectiveTc)+(isRealTc?' ✦':'');
       const tcColor=isRealTc?'color:var(--rose-dark)':'color:var(--text-muted)';
       h+='<tr class="'+rowCls+'">'
@@ -951,6 +1191,9 @@ function renderPlan(){
         +'</tr>';
     });
     document.getElementById(id).innerHTML=h+'</tbody>';
+    // Scroll to current month
+    const curRow = document.querySelector('#'+id+' tr.current-month');
+    if(curRow) setTimeout(()=>curRow.scrollIntoView({block:'center',behavior:'smooth'}), 100);
   });
 }
 function renderMinimo(){
@@ -1049,7 +1292,7 @@ function updMain(k,v){
   renderAhorro();
 }
 // ─── TORTA ───
-let tortaIdx = 0; // Empezamos en abril — el mes actual
+let tortaIdx = CURRENT_MONTH;
 let tortaInst = null;
 
 function getTortaData(i) {
@@ -1071,7 +1314,15 @@ function updateTortaSummary() {
   const d = getTortaData(i);
   const extra = getExtra(i);
 
-  document.getElementById('torta-mes-label').textContent = MONTHS_LABEL[i];
+  const _badge = i===CURRENT_MONTH
+    ? ' <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--rose-dark);color:white;vertical-align:middle">Mes actual</span>'
+    : i<CURRENT_MONTH ? ' <span style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--blush);color:var(--text-muted);vertical-align:middle">Pasado</span>' : '';
+  document.getElementById('torta-mes-label').innerHTML = MONTHS_LABEL[i] + _badge;
+  const isCurrentM = i === CURRENT_MONTH;
+  const isPastM = i < CURRENT_MONTH;
+  const badge = isCurrentM ? '<span style="font-size:11px;padding:2px 10px;border-radius:10px;background:var(--rose-dark);color:white;margin-left:.5rem;vertical-align:middle">Mes actual</span>'
+    : isPastM ? '<span style="font-size:11px;padding:2px 10px;border-radius:10px;background:var(--blush);color:var(--text-muted);margin-left:.5rem;vertical-align:middle">Pasado</span>'
+    : '';
   document.getElementById('torta-sueldo-label').textContent =
     'Sueldo' + (extra > 0 ? ' + ' + (i===10?'Bono':'Aguinaldo') : '') + ': $' + f(d.sueldo);
 
@@ -1202,15 +1453,315 @@ function renderAhorro(){renderScenarios();renderPlan();renderMinimo();renderChar
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
+// ─── VIEW MODE ───
+const isViewMode = new URLSearchParams(window.location.search).get('view') === 'true';
+if(isViewMode) {
+  document.body.classList.add('view-mode');
+  // Disable all interactive JS actions
+  window._viewMode = true;
+}
+const guardSave = fn => isViewMode ? ()=>{} : fn;
+// Override save functions in view mode
+if(isViewMode) {
+  window.saveToStorage = ()=>{};
+  window.saveReal = ()=>{};
+  window.savePpto = ()=>{};
+  window.updateReal = ()=>{};
+  window.updatePpto = ()=>{};
+  window.updMain = ()=>{};
+  window.toggleMD = ()=>{};
+}
+
+
+// ─── CHECKLIST ───
+const CHECKLIST = [
+  {
+    categoria: '⚠️ Reservar YA — se agotan meses antes',
+    color: '#fce4e4', border: '#f0a0a0', badge: '#e53935',
+    items: [
+      { id:'c1',  texto:'🧙‍♀️ Warner Bros Studio Tour',        detalle:'Se agota con meses. Reservar en wbstudiotour.co.uk',       fecha:'Antes de enero 2027', link:'https://www.wbstudiotour.co.uk/tickets/' },
+      { id:'c2',  texto:'🏛 Galería Borghese (Roma)',          detalle:'Solo 2 hs por turno, cupo muy limitado.',                   fecha:'Antes de febrero 2027', link:'https://galleriaborghese.beniculturali.it/en/visit/book-a-visit/' },
+      { id:'c3',  texto:'🏛 Museos Vaticanos + Sixtina',      detalle:'Sin reserva = 2-3 hs de fila. Obligatorio reservar.',       fecha:'2-3 meses antes', link:'https://tickets.museivaticani.va' },
+      { id:'c4',  texto:'🏛 Coliseo + Foro Romano',           detalle:'Reserva online obligatoria.',                               fecha:'2-3 meses antes', link:'https://www.coopculture.it/en/colosseo-e-shop.cfm' },
+      { id:'c5',  texto:'✈️ Vuelos internacionales EZE↔BCN',  detalle:'Reservar 5-6 meses antes para mejores precios.',           fecha:'Antes de noviembre 2026', link:'https://www.google.com/flights' },
+      { id:'c6',  texto:'🎭 Musical West End (Londres)',       detalle:'Los más populares se agotan semanas antes.',               fecha:'1-2 meses antes', link:'https://www.todaytix.com/london' },
+    ]
+  },
+  {
+    categoria: '📋 Reservar con anticipación',
+    color: '#fff8e1', border: '#f9c74f', badge: '#f4a200',
+    items: [
+      { id:'c7',  texto:'🏛 Galería Uffizi (Florencia)',       detalle:'Reservar online para evitar colas largas.',               fecha:'3-4 semanas antes', link:'https://www.uffizi.it/en/the-uffizi/tickets' },
+      { id:'c8',  texto:'🏛 El David — Academia (Florencia)',  detalle:'Muy concurrido en mayo.',                                  fecha:'3-4 semanas antes', link:'https://www.b-ticket.com/b-ticket/shop/basket.aspx' },
+      { id:'c9',  texto:'🏛 Cúpula de Brunelleschi',          detalle:'Reservar con anticipación — cupo limitado.',               fecha:'3-4 semanas antes', link:'https://www.museumflorence.com/en/tickets.html' },
+      { id:'c10', texto:'🗼 Torre Eiffel (París)',             detalle:'Reservar la subida online.',                               fecha:'2-3 semanas antes', link:'https://ticket.toureiffel.paris/en' },
+      { id:'c11', texto:'🖼 Museo del Louvre',                 detalle:'Reservar online — colas eternas sin entrada.',             fecha:'2-3 semanas antes', link:'https://www.ticketlouvre.fr/louvre/b2c/index.cfm' },
+      { id:'c12', texto:'🏛 Sagrada Família (Barcelona)',      detalle:'Reservar con tiempo para elegir horario.',                 fecha:'2-3 semanas antes', link:'https://sagradafamilia.org/en/tickets' },
+      { id:'c13', texto:'🌿 Park Güell (Barcelona)',           detalle:'Acceso al área monumental con reserva.',                   fecha:'2-3 semanas antes', link:'https://parkguell.barcelona/en/plan-your-visit/tickets' },
+      { id:'c14', texto:'🏰 Torre de Londres',                 detalle:'Reservar online para mejor precio.',                      fecha:'2-3 semanas antes', link:'https://www.hrp.org.uk/tower-of-london/visit/tickets/' },
+      { id:'c15', texto:'🚆 Eurostar París → Londres',         detalle:'Mejor precio cuanto antes reserves.',                     fecha:'1-2 meses antes', link:'https://www.eurostar.com' },
+      { id:'c16', texto:'✈️ Vuelos internos (Ryanair/EasyJet)',detalle:'BCN→Roma, VCE→París, LHR→BCN.',                          fecha:'2-3 meses antes', link:'https://www.skyscanner.com' },
+      { id:'c17', texto:'🚆 Trenes Italia (Trenitalia)',       detalle:'Roma→Florencia y Florencia→Venecia.',                     fecha:'1-2 meses antes', link:'https://www.trenitalia.com' },
+      { id:'c18', texto:'🏨 Airbnb todas las ciudades',        detalle:'7 estadías — reservar con tiempo para mejores opciones.', fecha:'2-3 meses antes', link:'https://www.airbnb.com' },
+    ]
+  },
+  {
+    categoria: '🛂 Documentación y trámites',
+    color: '#e8f5e9', border: '#a8d5a2', badge: '#2e7d32',
+    items: [
+      { id:'c19', texto:'📄 Pasaporte vigente',               detalle:'Verificar que no vence antes de noviembre 2027 (6 meses post-viaje).', fecha:'Ahora' },
+      { id:'c20', texto:'💊 Seguro de viaje',                  detalle:'Assist Card o Iati — mínimo 31 días. Cubre emergencias y cancelaciones.', fecha:'Antes del viaje', link:'https://www.assistcard.com' },
+      { id:'c21', texto:'💳 Tarjeta Wise o Revolut',          detalle:'Pedir con tiempo — tardan 2-3 semanas en llegar.', fecha:'2 meses antes', link:'https://wise.com' },
+      { id:'c22', texto:'📱 eSIM Europa (Airalo)',             detalle:'Comprar antes de viajar desde Argentina — ~USD 25.', fecha:'1 semana antes', link:'https://www.airalo.com' },
+      { id:'c23', texto:'💉 Vacunas / chequeo médico',        detalle:'Europa no exige vacunas pero consultar con médico si hay pendientes.', fecha:'1-2 meses antes' },
+    ]
+  },
+  {
+    categoria: '🛍 Antes de salir',
+    color: '#f3e5f5', border: '#b89ac8', badge: '#7b1fa2',
+    items: [
+      { id:'c24', texto:'🎒 Hacer las valijas',                detalle:'Capas para primavera. Zapatos cómodos. Ropa de playa. Piluso.', fecha:'Días antes' },
+      { id:'c25', texto:'💵 Comprar dólares / euros de emergencia', detalle:'Tener algo de efectivo para imprevistos.', fecha:'Días antes' },
+      { id:'c26', texto:'📸 Cargar cámara y descargar fotos',  detalle:'Liberar espacio en el teléfono también.', fecha:'Días antes' },
+      { id:'c27', texto:'🔌 Adaptador de corriente europeo',   detalle:'Europa usa tipo C/E/F (dos puntitas redondas).', fecha:'Antes del viaje' },
+      { id:'c28', texto:'🏥 Medicamentos básicos',             detalle:'Ibuprofeno, antiácidos, antidiarreico, curita. Más barato acá.', fecha:'Antes del viaje' },
+      { id:'c29', texto:'📋 Tax Free — entender cómo funciona', detalle:'Guardar TODOS los tickets en España desde el día 1. Se recupera hasta 21% IVA.', fecha:'Día 1 del viaje', link:'https://www.globalblue.com/tax-free-shopping/spain' },
+      { id:'c30', texto:'🔒 Candado para valija',              detalle:'Para vuelos con equipaje en bodega.', fecha:'Antes del viaje' },
+    ]
+  },
+];
+
+// Load checklist state
+const CL_STATE = {};
+function saveChecklist(){
+  try { localStorage.setItem('europa2027_checklist', JSON.stringify(CL_STATE)); } catch(e){}
+}
+function loadChecklist(){
+  try {
+    const d = localStorage.getItem('europa2027_checklist');
+    if(d) Object.assign(CL_STATE, JSON.parse(d));
+  } catch(e){}
+}
+function toggleCheck(id){
+  CL_STATE[id] = !CL_STATE[id];
+  saveChecklist();
+  renderChecklist();
+renderTracker();
+  showSaved();
+}
+
+function renderChecklist(){
+  const total = CHECKLIST.reduce((s,c)=>s+c.items.length,0);
+  const done  = Object.values(CL_STATE).filter(Boolean).length;
+  const pct   = Math.round(done/total*100);
+
+  let html = `
+    <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem">Progreso total</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--rose-dark)">${done}/${total}</div>
+      </div>
+      <div style="height:8px;background:var(--blush);border-radius:8px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:linear-gradient(to right,var(--rose),var(--rose-dark));border-radius:8px;transition:width .6s ease"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:.4rem;text-align:right">${pct}% completado</div>
+    </div>`;
+
+  CHECKLIST.forEach(cat => {
+    const catDone = cat.items.filter(i=>CL_STATE[i.id]).length;
+    html += `
+      <div style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--text)">${cat.categoria}</h3>
+          <span style="font-size:11px;padding:3px 10px;border-radius:10px;background:${cat.color};color:${cat.badge};border:1px solid ${cat.border}">${catDone}/${cat.items.length}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">`;
+    
+    cat.items.forEach(item => {
+      const done = !!CL_STATE[item.id];
+      html += `
+          <div onclick="toggleCheck('${item.id}')" style="display:flex;align-items:flex-start;gap:.75rem;padding:.875rem 1rem;background:${done?'rgba(255,255,255,.4)':'rgba(255,255,255,.7)'};border:1px solid ${done?'rgba(196,122,138,.1)':'var(--border)'};border-radius:12px;cursor:pointer;transition:all .2s;opacity:${done?.6:1}">
+            <div style="font-size:1.3rem;flex-shrink:0;margin-top:1px">${done?'✅':'⬜'}</div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:500;color:var(--text);${done?'text-decoration:line-through;color:var(--text-muted)':''}">${item.texto}</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;${done?'text-decoration:line-through':''}">${item.detalle}</div>
+              <div style="display:flex;align-items:center;gap:.5rem;margin-top:.35rem">
+                <span style="font-size:11px;color:var(--rose-dark)">📅 ${item.fecha}</span>
+                ${item.link?`<a href="${item.link}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;padding:2px 8px;border-radius:8px;background:var(--blush);color:var(--rose-dark);text-decoration:none;border:1px solid var(--border)">🔗 Ver</a>`:''}
+              </div>
+            </div>
+          </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  document.getElementById('checklist-container').innerHTML = html;
+}
+
+
+// ─── TRACKER DE GASTOS ───
+const CAT_LABELS = {
+  comida:'🍕 Comida', transporte:'🚆 Transporte', entradas:'🏛 Entradas',
+  alojamiento:'🏨 Alojamiento', shopping:'🛍 Shopping', noche:'🎉 Vida nocturna', varios:'📦 Varios'
+};
+const CAT_COLORS = {
+  comida:'#e8a0b0', transporte:'#b89ac8', entradas:'#f4c542',
+  alojamiento:'#6ec6ca', shopping:'#f4a460', noche:'#9370db', varios:'#a0a0a0'
+};
+
+let GASTOS = [];
+let trackerCityFilter = 'todo';
+
+function saveGastos(){ try{localStorage.setItem('europa2027_gastos', JSON.stringify(GASTOS));}catch(e){} }
+function loadGastos(){
+  try{
+    const d = localStorage.getItem('europa2027_gastos');
+    if(d) GASTOS = JSON.parse(d);
+  }catch(e){}
+}
+
+function addGasto(){
+  const dia = document.getElementById('tr-dia').value;
+  const cat = document.getElementById('tr-cat').value;
+  const monto = parseFloat(document.getElementById('tr-monto').value);
+  const desc = document.getElementById('tr-desc').value.trim();
+  if(!dia || !monto || monto <= 0){ alert('Completá el día y el monto.'); return; }
+  const gasto = {
+    id: Date.now(),
+    dia: parseInt(dia),
+    ciudad: ITINERARIO[parseInt(dia)-1]?.ciudad || '?',
+    cat, monto, desc,
+    fecha: ITINERARIO[parseInt(dia)-1]?.fecha || ''
+  };
+  GASTOS.push(gasto);
+  saveGastos();
+  showSaved();
+  document.getElementById('tr-monto').value = '';
+  document.getElementById('tr-desc').value = '';
+  renderTracker();
+}
+
+function deleteGasto(id){
+  GASTOS = GASTOS.filter(g => g.id !== id);
+  saveGastos();
+  renderTracker();
+}
+
+function renderTrackerDiaSelect(){
+  const sel = document.getElementById('tr-dia');
+  if(!sel) return;
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— Elegí un día —</option>' +
+    ITINERARIO.map((d,i) => {
+      const label = `Día ${d.dia} · ${d.fecha} · ${d.ciudad}`;
+      return `<option value="${d.dia}" ${d.dia==current?'selected':''}>${label}</option>`;
+    }).join('');
+}
+
+function renderTracker(){
+  renderTrackerDiaSelect();
+  const presupuesto = 5000; // meta total
+  const totalGastado = GASTOS.reduce((s,g) => s+g.monto, 0);
+  const pct = Math.min(100, Math.round(totalGastado/presupuesto*100));
+  const barColor = pct > 90 ? '#e53935' : pct > 70 ? '#f4a200' : 'linear-gradient(to right,var(--rose),var(--rose-dark))';
+
+  // Resumen cards
+  const porCat = {};
+  GASTOS.forEach(g => { porCat[g.cat] = (porCat[g.cat]||0) + g.monto; });
+  const topCat = Object.entries(porCat).sort((a,b)=>b[1]-a[1])[0];
+
+  document.getElementById('tracker-resumen').innerHTML = `
+    <div class="metric-card"><div class="metric-label">Gastado total</div><div class="metric-value accent">${fu(totalGastado)}</div></div>
+    <div class="metric-card"><div class="metric-label">Presupuesto</div><div class="metric-value">${fu(presupuesto)}</div></div>
+    <div class="metric-card"><div class="metric-label">Disponible</div><div class="metric-value" style="color:${totalGastado>presupuesto?'#e53935':'#3a7034'}">${fu(Math.abs(presupuesto-totalGastado))} ${totalGastado>presupuesto?'⚠️ EXCEDIDO':''}</div></div>
+    <div class="metric-card"><div class="metric-label">Mayor gasto</div><div class="metric-value" style="font-size:1.2rem">${topCat?CAT_LABELS[topCat[0]]+' · '+fu(topCat[1]):'—'}</div></div>`;
+
+  const bar = document.getElementById('tracker-bar');
+  if(bar){ bar.style.width=pct+'%'; bar.style.background=pct>90?'#e53935':pct>70?'#f4a200':''; }
+  const pctEl = document.getElementById('tracker-pct');
+  if(pctEl) pctEl.textContent = pct+'% del presupuesto utilizado';
+
+  // City filters
+  const ciudades = [...new Set(GASTOS.map(g=>g.ciudad))];
+  document.getElementById('tracker-city-filters').innerHTML =
+    ['todo',...ciudades].map(c=>`
+      <button class="filter-btn ${trackerCityFilter===c?'active':''}" onclick="setTrackerCity('${c}',this)">
+        ${c==='todo'?'Todos':c}
+      </button>`).join('');
+
+  // Lista de gastos
+  const filtered = trackerCityFilter==='todo' ? GASTOS : GASTOS.filter(g=>g.ciudad===trackerCityFilter);
+  const byDia = {};
+  filtered.forEach(g=>{ if(!byDia[g.dia]) byDia[g.dia]=[]; byDia[g.dia].push(g); });
+
+  let listaHtml = '';
+  if(filtered.length === 0){
+    listaHtml = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:2rem">No hay gastos registrados todavía.</p>';
+  } else {
+    Object.keys(byDia).sort((a,b)=>+a-+b).forEach(dia => {
+      const gastosDia = byDia[dia];
+      const totalDia = gastosDia.reduce((s,g)=>s+g.monto,0);
+      const d = ITINERARIO[+dia-1];
+      listaHtml += `
+        <div style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem">Día ${dia} · ${d?.fecha||''} · <em style="color:var(--rose-dark)">${d?.ciudad||''}</em></div>
+            <div style="font-size:13px;color:var(--text-soft);font-weight:500">${fu(totalDia)}</div>
+          </div>`;
+      gastosDia.forEach(g => {
+        listaHtml += `
+          <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:12px;margin-bottom:.35rem">
+            <div style="font-size:1.1rem;width:28px;text-align:center">${CAT_LABELS[g.cat].split(' ')[0]}</div>
+            <div style="flex:1">
+              <div style="font-size:13px;color:var(--text);font-weight:500">${g.desc||CAT_LABELS[g.cat]}</div>
+              <div style="font-size:11px;color:var(--text-muted)">${CAT_LABELS[g.cat]}</div>
+            </div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--rose-dark)">${fu(g.monto)}</div>
+            <button onclick="deleteGasto(${g.id})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:6px" title="Eliminar">✕</button>
+          </div>`;
+      });
+      listaHtml += '</div>';
+    });
+  }
+  document.getElementById('tracker-lista').innerHTML = listaHtml;
+
+  // Por categoría
+  let catHtml = '';
+  Object.entries(porCat).sort((a,b)=>b[1]-a[1]).forEach(([cat,total])=>{
+    const pctCat = totalGastado>0?Math.round(total/totalGastado*100):0;
+    catHtml += `
+      <div style="margin-bottom:.75rem">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px">
+          <span>${CAT_LABELS[cat]}</span>
+          <span style="color:var(--text-soft)">${fu(total)} · ${pctCat}%</span>
+        </div>
+        <div style="height:6px;background:var(--blush);border-radius:6px;overflow:hidden">
+          <div style="height:100%;width:${pctCat}%;background:${CAT_COLORS[cat]};border-radius:6px;transition:width .6s ease"></div>
+        </div>
+      </div>`;
+  });
+  if(!catHtml) catHtml = '<p style="color:var(--text-muted);font-size:13px">Agregá gastos para ver el análisis.</p>';
+  document.getElementById('tracker-cats').innerHTML = catHtml;
+}
+
+function setTrackerCity(city, btn){
+  trackerCityFilter = city;
+  renderTracker();
+}
+
 // ─── INIT ───
 loadFromStorage();
 loadPpto();
 loadReal();
+loadChecklist();
+loadGastos();
 renderItinerario();
 renderPresupuesto();
 renderVuelos();
 renderAlojamiento();
 renderMustDo();
+renderChecklist();
+renderTracker();
 renderInputs();
 renderAhorro();
 
@@ -1275,6 +1826,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 
+<div class="view-banner">👁 Modo solo lectura — contactá a Guada para editar ✦</div>
 <div id="saved-toast" style="
   position:fixed;bottom:5rem;right:1.5rem;
   background:rgba(196,122,138,.9);color:white;
