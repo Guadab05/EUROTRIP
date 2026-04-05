@@ -225,7 +225,7 @@ main{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 6rem}
 .sc-opt .sc-value{color:#3a7034}.sc-mod .sc-value{color:#905010}.sc-pes .sc-value{color:#902020}
 .sc-badge{font-size:11px;padding:3px 10px;border-radius:20px;display:inline-block}
 .sc-opt .sc-badge{background:#d4f0d0;color:#3a7034}.sc-mod .sc-badge{background:#ffe0b0;color:#905010}.sc-pes .sc-badge{background:#ffd0d0;color:#902020}
-.scenario-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
+.scenario-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:2rem}@media(max-width:480px){.scenario-row{grid-template-columns:1fr 1fr}}
 
 /* TABLAS */
 .table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.7);margin-bottom:1.5rem}
@@ -245,16 +245,18 @@ tr.extra td{background:linear-gradient(to right,rgba(242,196,206,.15),transparen
 .inputs-panel summary{font-family:'Cormorant Garamond',serif;font-size:1.3rem;cursor:pointer;color:var(--text);list-style:none;display:flex;align-items:center;gap:.5rem}
 .inputs-panel summary::after{content:'+';font-size:1.5rem;color:var(--rose-dark);margin-left:auto}
 details[open] summary::after{content:'−'}
-.inputs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;margin-top:1.25rem}
+.inputs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-top:1.25rem}@media(max-width:480px){.inputs-grid{grid-template-columns:1fr}}
 .inp-group{display:flex;flex-direction:column;gap:5px}
 .inp-group label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
 .inp-group input{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 11px;font-family:'Jost';font-size:13px;color:var(--text);width:100%}
 .inp-group input:focus{outline:none;border-color:var(--rose-deep)}
 .inp-section-title{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-soft);margin:1.25rem 0 .6rem;padding-bottom:.4rem;border-bottom:1px solid var(--border)}
 .tarjetas-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
+@media(max-width:600px){.tarjetas-grid{grid-template-columns:1fr 1fr}.tarjetas-grid .th:first-child,.tarjetas-grid div[style*="text-soft"]{grid-column:1/-1;font-weight:500;color:var(--text-soft);padding-top:.5rem}}
 .tarjetas-grid .th,.tc-grid .th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);font-weight:500}
 .tarjetas-grid input,.tc-grid input{padding:5px 9px;font-size:12px;border-radius:8px;border:1px solid var(--border);font-family:'Jost';color:var(--text);background:white}
 .tc-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:.35rem .75rem;align-items:center;font-size:12px}
+@media(max-width:600px){.tc-grid{grid-template-columns:1fr 1fr;gap:.4rem .5rem}.tc-grid .th:first-child,.tc-grid div[style*="text-soft"]{grid-column:1/-1;font-weight:500;color:var(--text-soft);padding-top:.5rem}.tc-grid input{font-size:12px;padding:5px 8px}}
 .three-col-tables{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem}
 .col-table{border-radius:14px;overflow:hidden;border:1px solid var(--border)}
 .col-table-header{padding:9px 12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
@@ -304,22 +306,22 @@ details[open] summary::after{content:'−'}
 <section class="hero">
   <div class="hero-eyebrow">Viaje con amigas · Primavera 2027</div>
   <h1>Hola, <em>Europa</em></h1>
-  <p class="hero-sub">20 Abril – 20 Mayo · 31 días · 🌸</p>
-  <div class="hero-route">🇦🇷 EZE → 🇪🇸 Barcelona → 🇮🇹 Roma · Florencia · Venecia → 🇫🇷 París → 🇬🇧 Londres → 🇪🇸 Madrid → 🇪🇸 Barcelona → 🇦🇷 EZE</div>
+  <p class="hero-sub">20 Abril – 19 Mayo · 30 días · 🌸</p>
+  <div class="hero-route">🇦🇷 EZE → 🇪🇸 Barcelona → 🇮🇹 Roma · Florencia · Venecia → 🇫🇷 París → 🇬🇧 Londres → 🇪🇸 Barcelona → 🇦🇷 EZE</div>
   <div class="cities-grid">
     <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Barcelona</div><div class="city-dates">21–23 Abr · 3 días</div><div class="city-tags"><span class="tag">Playa</span><span class="tag">Gaudí</span><span class="tag">Noche</span></div></div>
     <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Roma</div><div class="city-dates">24–29 Abr · 6 días</div><div class="city-tags"><span class="tag">Coliseo</span><span class="tag">Vaticano</span><span class="tag">Trastevere</span></div></div>
-    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Florencia</div><div class="city-dates">30 Abr–2 May · 3 días</div><div class="city-tags"><span class="tag">Uffizi</span><span class="tag">El David</span><span class="tag">Cúpula</span></div></div>
-    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Venecia</div><div class="city-dates">3–5 May · 3 días</div><div class="city-tags"><span class="tag">Canales</span><span class="tag">Góndola</span><span class="tag">Burano</span></div></div>
-    <div class="city-card"><div class="city-flag">🇫🇷</div><div class="city-name">París</div><div class="city-dates">6–8 May · 3 días</div><div class="city-tags"><span class="tag">Eiffel</span><span class="tag">Louvre</span><span class="tag">Oberkampf</span></div></div>
-    <div class="city-card"><div class="city-flag">🇬🇧</div><div class="city-name">Londres</div><div class="city-dates">9–12 May · 4 días</div><div class="city-tags"><span class="tag">HP Tour</span><span class="tag">Shoreditch</span><span class="tag">West End</span></div></div>
-    <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Madrid</div><div class="city-dates">13–16 May · 4 días</div><div class="city-tags"><span class="tag">Shopping</span><span class="tag">Kapital</span><span class="tag">Retiro</span></div></div>
+    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Florencia</div><div class="city-dates">30 Abr–3 May · 4 días</div><div class="city-tags"><span class="tag">Uffizi</span><span class="tag">El David</span><span class="tag">Cúpula</span></div></div>
+    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Venecia</div><div class="city-dates">4–7 May · 4 días</div><div class="city-tags"><span class="tag">Canales</span><span class="tag">Góndola</span><span class="tag">Burano</span></div></div>
+    <div class="city-card"><div class="city-flag">🇫🇷</div><div class="city-name">París</div><div class="city-dates">7–9 May · 3 días</div><div class="city-tags"><span class="tag">Eiffel</span><span class="tag">Louvre</span><span class="tag">Oberkampf</span></div></div>
+    <div class="city-card"><div class="city-flag">🇬🇧</div><div class="city-name">Londres</div><div class="city-dates">11–16 May · 6 días</div><div class="city-tags"><span class="tag">HP Tour</span><span class="tag">Shoreditch</span><span class="tag">West End</span></div></div>
+
     <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Barcelona</div><div class="city-dates">17–19 May · 3 días</div><div class="city-tags"><span class="tag">Playa</span><span class="tag">Tax Free</span><span class="tag">Opium</span></div></div>
   </div>
   <div class="hero-stats">
-    <div class="stat"><div class="stat-val">31</div><div class="stat-lbl">días</div></div>
+    <div class="stat"><div class="stat-val">30</div><div class="stat-lbl">días</div></div>
     <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">países</div></div>
-    <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">ciudades</div></div>
+    <div class="stat"><div class="stat-val">7</div><div class="stat-lbl">ciudades</div></div>
     <div class="stat"><div class="stat-val" id="dias-countdown">—</div><div class="stat-lbl">días que faltan</div></div>
   </div>
 </section>
@@ -351,7 +353,7 @@ details[open] summary::after{content:'−'}
 <div id="page-itinerario" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Itinerario <em>completo</em></h2>
-  <p class="section-desc">31 días · 20 Abril – 20 Mayo 2027 · EZE ↔ BCN</p>
+  <p class="section-desc">30 días · 20 Abril – 19 Mayo 2027 · EZE ↔ BCN</p>
   <div class="timeline" id="timeline-container"></div>
 </main>
 </div>
@@ -540,25 +542,26 @@ const ITINERARIO = [
   {dia:10,fecha:'29-Abr',pais:'Italia',ciudad:'Roma',tipo:'🎉 Gran noche romana',noche:true,desc:'Mañana tranquila. NOCHE: aperitivo largo en Trastevere → Pigneto → Circolo degli Artisti o Goa Club.',aloj:'Airbnb Trastevere / Pigneto',tip:'Circolo degli Artisti: underground cultural. Goa Club: electrónica. Entrada ~€10–15.'},
   {dia:11,fecha:'30-Abr',pais:'Italia',ciudad:'Florencia',tipo:'🚆 Traslado + Turismo',vuelo:true,desc:'Tren Roma→Florencia Frecciarossa (1:30 hs). Llegada al mediodía. Ponte Vecchio, Piazza della Signoria, primer gelato.',aloj:'Airbnb Oltrarno / Santo Spirito',tip:'italotreno.it o trenitalia.com. Santo Spirito en mayo: terrazas, flores, el barrio más animado de Florencia.'},
   {dia:12,fecha:'01-May',pais:'Italia',ciudad:'Florencia',tipo:'🏛 Turismo',desc:'Galería Uffizi — La Primavera de Botticelli. Galería Academia — El David. Atardecer en Piazzale Michelangelo.',aloj:'Airbnb Oltrarno / Santo Spirito',tip:'Uffizi: uffizi.it | Academia: b-ticket.com — reservar 3–4 semanas. Ver La Primavera en mayo tiene otro sentido.'},
-  {dia:13,fecha:'02-May',pais:'Italia',ciudad:'Florencia',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'Cúpula de Brunelleschi. Mercado Central. Tarde: Jardines de Boboli en flor. NOCHE: aperitivo en Santo Spirito → Full Up Club.',aloj:'Airbnb Oltrarno / Santo Spirito',tip:'Boboli en mayo: hermosísimo, flores por todos lados. Full Up y YAB: martes y jueves noche de estudiantes.'},
-  {dia:14,fecha:'03-May',pais:'Italia',ciudad:'Venecia',tipo:'🚆 Traslado + Turismo',vuelo:true,desc:'Tren Florencia→Venecia (2 hs). Primera impresión de los canales al atardecer de mayo.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'trenitalia.com — 2 hs. Vaporetto 48hs: actv.avmspa.it. Dorsoduro: barrio universitario, más auténtico.'},
-  {dia:15,fecha:'04-May',pais:'Italia',ciudad:'Venecia',tipo:'🏛 Turismo',desc:'Piazza San Marcos + Basílica + Palacio Ducal. Mercado de Rialto (mañana). Paseo en góndola. Aperitivo con cicchetti.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'Góndola: ~€90/30 min. Traghetto para cruzar el Gran Canal: €2. Mayo: sin la locura del verano.'},
-  {dia:16,fecha:'05-May',pais:'Italia',ciudad:'Venecia',tipo:'🌊 Murano + Burano',desc:'Excursión a Murano (vidrio soplado) y Burano (casas de colores). NOCHE: Bacaro Jazz con cicchetti.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'Murano + Burano incluidos en pase vaporetto 48hs. Burano en mayo: flores en las ventanas.'},
-  {dia:17,fecha:'06-May',pais:'Francia',ciudad:'París',tipo:'✈ Traslado + Llegada',vuelo:true,desc:'Vuelo Venecia→París (2 hs). Tarde: primer paseo, picnic con baguette y queso en el Sena.',aloj:'Airbnb Le Marais / Oberkampf',tip:'EasyJet/Vueling VCE→CDG (~€35–50). Desde CDG: RER B. Mayo en París = la ciudad en su máximo esplendor.'},
-  {dia:18,fecha:'07-May',pais:'Francia',ciudad:'París',tipo:'🏛 Turismo',desc:'Torre Eiffel (subida — reservar). Campos Elíseos, Arco del Triunfo. Jardín de las Tullerías en flor. Noche: la Seine iluminada.',aloj:'Airbnb Le Marais / Oberkampf',tip:'Torre Eiffel: toureiffel.paris. Mayo: la Torre con el cielo azul de primavera es otra cosa.'},
-  {dia:19,fecha:'08-May',pais:'Francia',ciudad:'París',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'Louvre. Musée d\'Orsay (Monet, Renoir, Van Gogh). Sacré-Cœur y Montmartre. NOCHE: Rue Oberkampf → Le Pompon.',aloj:'Airbnb Le Marais / Oberkampf',tip:'Louvre: ticketlouvre.fr | Orsay: musee-orsay.fr. Oberkampf: el barrio más hipster y animado de París.'},
-  {dia:20,fecha:'09-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🚆 Eurostar + Llegada',vuelo:true,desc:'Eurostar París→Londres St Pancras (2:20 hs). Check-in en Shoreditch. Paseo por King\'s Cross — ¡buscar el andén 9¾!',aloj:'Airbnb Shoreditch / Hackney',tip:'eurostar.com (~€60–90). Mayo en Londres: ~17°C, días largos, sol hasta las 21hs.'},
-  {dia:21,fecha:'10-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🧙‍♀️ Warner Bros Studio Tour',hp:true,desc:'¡El día más esperado! Sets originales: Gran Salón, Callejón Diagon, Hogwarts Express, Butterbeer. Tarde: Borough Market.',aloj:'Airbnb Shoreditch / Hackney',tip:'⚠️ RESERVAR CON MESES: wbstudiotour.co.uk — ~£55. Tren desde Euston a Watford Junction + shuttle oficial.'},
-  {dia:22,fecha:'11-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🧙‍♀️ Diagon Alley + Turismo',hp:true,desc:'Leadenhall Market (el Callejón Diagon). Platform 9¾ + tienda oficial HP. Torre de Londres + joyas de la corona. Tarde: Camden.',aloj:'Airbnb Shoreditch / Hackney',tip:'Leadenhall y Platform 9¾: gratis. Torre de Londres: hrp.org.uk. Camden en mayo: mercado al aire libre.'},
-  {dia:23,fecha:'12-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'British Museum (gratis). Covent Garden. Tate Modern. NOCHE: Shoreditch — Boxpark → XOYO o Village Underground.',aloj:'Airbnb Shoreditch / Hackney',tip:'XOYO y Village Underground: los mejores clubs de Londres. Beer gardens ya abiertos en mayo.'},
-  {dia:24,fecha:'13-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🎉 Día libre',noche:true,desc:'Buckingham Palace, Portobello Road Market (vintage) o excursión a Oxford. NOCHE: pub crawl por el Soho.',aloj:'Airbnb Shoreditch / Hackney',tip:'Portobello Market: sábados. Oxford: 1:30 hs en tren desde Paddington. Pub crawl: la experiencia más inglesa.'},
+  {dia:13,fecha:'02-May',pais:'Italia',ciudad:'Florencia',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'Cúpula de Brunelleschi. Mercado Central. Tarde: Jardines de Boboli en flor. NOCHE: aperitivo en Santo Spirito → Full Up Club.',aloj:'Airbnb Oltrarno / Santo Spirito',tip:'Boboli en mayo: hermosísimo. Full Up y YAB: martes y jueves noche de estudiantes.'},
+  {dia:14,fecha:'03-May',pais:'Italia',ciudad:'Florencia',tipo:'🌸 Día libre Florencia',desc:'Día libre para perderse. Mercado de las pulgas de Piazza dei Ciompi (vintage y antigüedades). Callejitas del Oltrarno, tiendas de artesanos. Tarde en el Giardino Bardini — vistas secretas de Florencia. Aperitivo largo en Santo Spirito.',aloj:'Airbnb Oltrarno / Santo Spirito',tip:'Giardino Bardini: el jardín secreto más bello de Florencia, con wisteria en mayo. Mucho menos turístico que Boboli.'},
+  {dia:15,fecha:'04-May',pais:'Italia',ciudad:'Venecia',tipo:'🚆 Traslado + Turismo',vuelo:true,desc:'Tren Florencia→Venecia (2 hs). Primera impresión de los canales al atardecer de mayo.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'trenitalia.com — 2 hs. Vaporetto 48hs: actv.avmspa.it. Dorsoduro: barrio universitario, más auténtico.'},
+  {dia:16,fecha:'05-May',pais:'Italia',ciudad:'Venecia',tipo:'🏛 Turismo',desc:'Piazza San Marcos + Basílica + Palacio Ducal. Mercado de Rialto (mañana). Paseo en góndola. Aperitivo con cicchetti.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'Góndola: ~€90/30 min. Traghetto para cruzar el Gran Canal: €2. Mayo: sin la locura del verano.'},
+  {dia:17,fecha:'06-May',pais:'Italia',ciudad:'Venecia',tipo:'🌊 Murano + Burano',desc:'Excursión a Murano (vidrio soplado) y Burano (casas de colores). NOCHE: Bacaro Jazz con cicchetti.',aloj:'Airbnb Dorsoduro / Cannaregio',tip:'Murano + Burano incluidos en pase vaporetto 48hs. Burano en mayo: flores en las ventanas.'},
+  {dia:20,fecha:'09-May',pais:'Francia',ciudad:'París',tipo:'✈ Traslado + Llegada',vuelo:true,desc:'Vuelo Venecia→París (2 hs). Tarde: primer paseo, picnic con baguette y queso en el Sena.',aloj:'Airbnb Le Marais / Oberkampf',tip:'EasyJet/Vueling VCE→CDG (~€35–50). Desde CDG: RER B. Mayo en París = la ciudad en su máximo esplendor.'},
+  {dia:20,fecha:'09-May',pais:'Francia',ciudad:'París',tipo:'🏛 Turismo',desc:'Torre Eiffel (subida — reservar). Campos Elíseos, Arco del Triunfo. Jardín de las Tullerías en flor. Noche: la Seine iluminada.',aloj:'Airbnb Le Marais / Oberkampf',tip:'Torre Eiffel: toureiffel.paris. Mayo: la Torre con el cielo azul de primavera es otra cosa.'},
+  {dia:20,fecha:'09-May',pais:'Francia',ciudad:'París',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'Louvre. Musée d\'Orsay (Monet, Renoir, Van Gogh). Sacré-Cœur y Montmartre. NOCHE: Rue Oberkampf → Le Pompon.',aloj:'Airbnb Le Marais / Oberkampf',tip:'Louvre: ticketlouvre.fr | Orsay: musee-orsay.fr. Oberkampf: el barrio más hipster y animado de París.'},
+  {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🚆 Eurostar + Llegada',vuelo:true,desc:'Eurostar París→Londres St Pancras (2:20 hs). Check-in en Shoreditch. Paseo por King\'s Cross — ¡buscar el andén 9¾!',aloj:'Airbnb Shoreditch / Hackney',tip:'eurostar.com (~€60–90). Mayo en Londres: ~17°C, días largos, sol hasta las 21hs.'},
+  {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🧙‍♀️ Warner Bros Studio Tour',hp:true,desc:'¡El día más esperado! Sets originales: Gran Salón, Callejón Diagon, Hogwarts Express, Butterbeer. Tarde: Borough Market.',aloj:'Airbnb Shoreditch / Hackney',tip:'⚠️ RESERVAR CON MESES: wbstudiotour.co.uk — ~£55. Tren desde Euston a Watford Junction + shuttle oficial.'},
+  {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🧙‍♀️ Diagon Alley + Turismo',hp:true,desc:'Leadenhall Market (el Callejón Diagon). Platform 9¾ + tienda oficial HP. Torre de Londres + joyas de la corona. Tarde: Camden.',aloj:'Airbnb Shoreditch / Hackney',tip:'Leadenhall y Platform 9¾: gratis. Torre de Londres: hrp.org.uk. Camden en mayo: mercado al aire libre.'},
+  {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🏛 Turismo + Fiesta',noche:true,desc:'British Museum (gratis). Covent Garden. Tate Modern. NOCHE: Shoreditch — Boxpark → XOYO o Village Underground.',aloj:'Airbnb Shoreditch / Hackney',tip:'XOYO y Village Underground: los mejores clubs de Londres. Beer gardens ya abiertos en mayo.'},
+  {dia:25,fecha:'14-May',pais:'Inglaterra',ciudad:'Londres',tipo:'🎉 Día libre',noche:true,desc:'Buckingham Palace, Portobello Road Market (vintage) o excursión a Oxford. NOCHE: pub crawl por el Soho.',aloj:'Airbnb Shoreditch / Hackney',tip:'Portobello Market: sábados. Oxford: 1:30 hs en tren desde Paddington. Pub crawl: la experiencia más inglesa.'},
   {dia:25,fecha:'14-May',pais:'España',ciudad:'Madrid',tipo:'✈ Traslado + Primera noche',vuelo:true,noche:true,desc:'Vuelo Londres→Madrid (2:30 hs). Tarde: Gran Vía, Fuencarral. NOCHE: terraza en Malasaña, bares en Chueca.',aloj:'Airbnb Malasaña / Chueca',tip:'Vueling/Iberia LHR→MAD (~€40–60). La vida empieza a las 22hs en Madrid.'},
   {dia:26,fecha:'15-May',pais:'España',ciudad:'Madrid',tipo:'🛍 Shopping + Turismo',desc:'El Corte Inglés Callao, Gran Vía, Mango, Zara. Tarde: Barrio de las Letras, Retiro en flor. NOCHE: Lavapiés.',aloj:'Airbnb Malasaña / Chueca',tip:'El Corte Inglés Tax Free. Retiro en mayo: tulipanes y rosas, uno de los parques más bonitos de Europa.'},
   {dia:27,fecha:'16-May',pais:'España',ciudad:'Madrid',tipo:'🛍 Shopping + Gran noche',noche:true,desc:'Fuencarral, Malasaña boutiques, Camper. Tarde: Museo del Prado. GRAN NOCHE: Kapital (7 plantas) o Fabrik.',aloj:'Airbnb Malasaña / Chueca',tip:'Kapital: 7 plantas, la más famosa de España. Fabrik: electrónica mundial. Madrid: metro abre toda la noche los fines de semana.'},
   {dia:28,fecha:'17-May',pais:'España',ciudad:'Barcelona',tipo:'🚆 Traslado + Shopping',vuelo:true,desc:'AVE Madrid→Barcelona (2:30 hs) o vuelo (~45 min). Tarde: El Corte Inglés Diagonal, Passeig de Gràcia.',aloj:'Airbnb Eixample / Poblenou',tip:'AVE Renfe: renfe.com desde ~€30. Poblenou: muy de moda entre jóvenes, cerca de las playas.'},
-  {dia:29,fecha:'18-May',pais:'España',ciudad:'Barcelona',tipo:'🌊 Playa + Shopping + Fiesta',noche:true,desc:'Mañana: playa Bogatell (~20°C en mayo). Aperitivo en chiringuito. Tarde: últimas compras en El Born. NOCHE: Opium o La Terrrazza.',aloj:'Airbnb Eixample / Poblenou',tip:'La Terrrazza: al aire libre bajo las estrellas frente al mar. Opium: frente a la playa, perfecto para despedir el viaje.'},
-  {dia:30,fecha:'19-May',pais:'España',ciudad:'Barcelona',tipo:'🛍 Último día + Tax Free',desc:'Últimas compras: El Born, souvenirs. Tramitar Tax Free en el aeropuerto El Prat. Cena de despedida.',aloj:'Airbnb Eixample / Poblenou',tip:'Tax Free BCN: mostrador cerca de los controles T1. Recuperan hasta 21% IVA de todas las compras en España.'},
-  {dia:31,fecha:'20-May',pais:'✈ Vuelo',ciudad:'Barcelona → Buenos Aires',tipo:'✈ Vuelo BCN→EZE',vuelo:true,desc:'Vuelo de regreso BCN→EZE (12–14 hs con escala). 30 días de Europa en el cuerpo, la valija llena y el corazón más lleno todavía. ¡Hasta la próxima Europa!',aloj:'En avión ✈',tip:'Si el vuelo sale la tarde/noche del 19-May, la llegada a EZE es el 20-May.'},
+  {dia:28,fecha:'17-May',pais:'España',ciudad:'Barcelona',tipo:'🌊 Playa + Shopping + Fiesta',noche:true,desc:'Mañana: playa Bogatell (~20°C en mayo). Aperitivo en chiringuito. Tarde: últimas compras en El Born. NOCHE: Opium o La Terrrazza.',aloj:'Airbnb Eixample / Poblenou',tip:'La Terrrazza: al aire libre bajo las estrellas frente al mar. Opium: frente a la playa, perfecto para despedir el viaje.'},
+  {dia:29,fecha:'18-May',pais:'España',ciudad:'Barcelona',tipo:'🛍 Último día + Tax Free',desc:'Últimas compras: El Born, souvenirs. Tramitar Tax Free en el aeropuerto El Prat. Cena de despedida.',aloj:'Airbnb Eixample / Poblenou',tip:'Tax Free BCN: mostrador cerca de los controles T1. Recuperan hasta 21% IVA de todas las compras en España.'},
+  {dia:30,fecha:'19-May',pais:'✈ Vuelo',ciudad:'Barcelona → Buenos Aires',tipo:'✈ Vuelo BCN→EZE',vuelo:true,desc:'Vuelo de regreso BCN→EZE (12–14 hs con escala). 30 días de Europa en el cuerpo, la valija llena y el corazón más lleno todavía. ¡Hasta la próxima Europa!',aloj:'En avión ✈',tip:'Si el vuelo sale la tarde/noche del 19-May, la llegada a EZE es el 20-May.'},
 ];
 
 function renderItinerario(){
@@ -627,8 +630,7 @@ const PPTO = {
     {item:'🧙‍♀️ Warner Bros Studio Tour',p1:70,p2:70,tip:'~£55. RESERVAR CON MESES. Lo más difícil de conseguir.'},
     {item:'🧙‍♀️ Platform 9¾ + tienda HP',p1:15,p2:15,tip:'La visita es gratis — solo transporte interno.'},
     {item:'🎉 Vida nocturna (clubs, cócteles, salidas)',p1:150,p2:150,tip:'~€10–15 entrada clubs. Pregame en el Airbnb = ahorro real.'},
-    {item:'🛍 Shopping Madrid',p1:280,p2:280,tip:'Tax Free: recuperar hasta 21% IVA. Guardar TODOS los tickets.'},
-    {item:'🛍 Shopping Barcelona (final)',p1:120,p2:120,tip:'El Born para ropa indie y souvenirs de calidad.'},
+    {item:'🛍 Shopping Barcelona (Tax Free incluido)',p1:200,p2:200,tip:'Passeig de Gràcia, El Born, El Corte Inglés Diagonal. Tax Free: recuperar hasta 21% IVA al salir.'},
     {item:'💊 Seguro de viaje (Assist Card / Iati)',p1:75,p2:75,tip:'Imprescindible para 31 días. Cubre emergencias y cancelaciones.'},
     {item:'📱 eSIM Europa (Airalo/Holaway)',p1:30,p2:30,tip:'airalo.com — cobertura total Europa desde ~USD 20–25.'},
     {item:'📱 Imprevistos',p1:95,p2:95,tip:'Para el tren perdido, la entrada de último momento o el gelato extra.'},
@@ -705,9 +707,8 @@ const VUELOS=[
   {tramo:'Barcelona BCN → Roma FCO',tipo:'✈ Ryanair / Vueling',fecha:'24-Abr',p1:35,reservado:false},
   {tramo:'Venecia VCE → París CDG',tipo:'✈ EasyJet / Vueling',fecha:'06-May',p1:45,reservado:false},
   {tramo:'París → Londres St Pancras',tipo:'🚆 Eurostar',fecha:'09-May',p1:75,reservado:false},
-  {tramo:'Londres LHR → Madrid MAD',tipo:'✈ Vueling / Iberia',fecha:'13-May',p1:50,reservado:false},
-  {tramo:'Madrid MAD → Barcelona BCN',tipo:'🚆 AVE o ✈ Vuelo',fecha:'17-May',p1:38,reservado:false},
   {tramo:'Barcelona BCN → Buenos Aires EZE',tipo:'✈ Internacional',fecha:'20-May',p1:490,reservado:false},
+  {tramo:'Londres LHR → Barcelona BCN',tipo:'✈ Vueling / Iberia',fecha:'16-May',p1:55,reservado:false},
   {tramo:'Roma FCO → Florencia (Frecciarossa)',tipo:'🚆 Trenitalia',fecha:'30-Abr',p1:25,reservado:false},
   {tramo:'Florencia → Venecia (Trenitalia)',tipo:'🚆 Trenitalia',fecha:'03-May',p1:20,reservado:false},
 ];
@@ -731,11 +732,10 @@ function renderVuelos(){
 const ALOJAMIENTOS=[
   {pais:'España',ciudad:'Barcelona',zona:'Airbnb Eixample / Gràcia',noches:3,checkin:'21-Abr',checkout:'23-Abr',precio:40},
   {pais:'Italia',ciudad:'Roma',zona:'Airbnb Trastevere / Pigneto',noches:6,checkin:'24-Abr',checkout:'29-Abr',precio:45},
-  {pais:'Italia',ciudad:'Florencia',zona:'Airbnb Oltrarno / Santo Spirito',noches:3,checkin:'30-Abr',checkout:'02-May',precio:40},
-  {pais:'Italia',ciudad:'Venecia',zona:'Airbnb Dorsoduro / Cannaregio',noches:3,checkin:'03-May',checkout:'05-May',precio:55},
-  {pais:'Francia',ciudad:'París',zona:'Airbnb Le Marais / Oberkampf',noches:3,checkin:'06-May',checkout:'08-May',precio:50},
-  {pais:'Inglaterra',ciudad:'Londres',zona:'Airbnb Shoreditch / Hackney',noches:4,checkin:'09-May',checkout:'12-May',precio:55},
-  {pais:'España',ciudad:'Madrid',zona:'Airbnb Malasaña / Chueca',noches:4,checkin:'13-May',checkout:'16-May',precio:40},
+  {pais:'Italia',ciudad:'Florencia',zona:'Airbnb Oltrarno / Santo Spirito',noches:3,checkin:'30-Abr',checkout:'03-May',precio:40},
+  {pais:'Italia',ciudad:'Venecia',zona:'Airbnb Dorsoduro / Cannaregio',noches:4,checkin:'04-May',checkout:'07-May',precio:55},
+  {pais:'Francia',ciudad:'París',zona:'Airbnb Le Marais / Oberkampf',noches:3,checkin:'07-May',checkout:'09-May',precio:50},
+  {pais:'Inglaterra',ciudad:'Londres',zona:'Airbnb Shoreditch / Hackney',noches:6,checkin:'11-May',checkout:'16-May',precio:55},
   {pais:'España',ciudad:'Barcelona',zona:'Airbnb Eixample / Poblenou (regreso)',noches:3,checkin:'17-May',checkout:'19-May',precio:40},
 ];
 const FLAGS={España:'🇪🇸',Italia:'🇮🇹',Francia:'🇫🇷',Inglaterra:'🇬🇧'};
@@ -794,11 +794,6 @@ const MUSTDO=[
   {pais:'Inglaterra',nombre:'Musical West End',desc:'Hamilton, Mamma Mia, Chicago… Una obra imperdible en Londres.',costo:'$70',reserva:'online',tags:['turismo','reservar']},
   {pais:'Inglaterra',nombre:'Shoreditch + XOYO / Village Underground',desc:'El barrio más cool de Londres. Los mejores clubs para música alternativa.',costo:'$15',reserva:'no',tags:['noche']},
   {pais:'Inglaterra',nombre:'Beer gardens en mayo',desc:'La experiencia más inglesa. Pubs con jardines abiertos en mayo.',costo:'$10',reserva:'no',tags:['noche']},
-  {pais:'España',nombre:'El Corte Inglés Callao + Tax Free',desc:'Shopping principal. Recuperar hasta 21% IVA al salir de España.',costo:'—',reserva:'no',tags:['turismo']},
-  {pais:'España',nombre:'Museo del Prado',desc:'Arte español: Velázquez, Goya, El Greco.',costo:'$15',reserva:'online',tags:['turismo']},
-  {pais:'España',nombre:'Retiro en mayo',desc:'El parque más bello de Madrid en plena floración. Gratis.',costo:'Gratis',reserva:'no',tags:['gratis']},
-  {pais:'España',nombre:'Kapital Madrid (7 plantas)',desc:'La discoteca más famosa de España. Sábado noche = la noche del viaje.',costo:'$15',reserva:'no',tags:['noche']},
-  {pais:'España',nombre:'Malasaña / Chueca de noche',desc:'Los barrios más animados de Madrid. Terrazas, bares, la vida española real.',costo:'$10',reserva:'no',tags:['noche']},
   {pais:'España',nombre:'Opium / La Terrrazza BCN',desc:'Despedida del viaje: La Terrrazza al aire libre bajo las estrellas frente al mar.',costo:'$15',reserva:'no',tags:['noche']},
 ];
 
