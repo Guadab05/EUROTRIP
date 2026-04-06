@@ -365,6 +365,13 @@ body.view-mode .md-card { cursor:default; }
 body.view-mode #install-btn { display:none!important; }
 .view-banner { display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(196,122,138,.95);color:white;text-align:center;padding:.5rem;font-family:'Jost';font-size:12px;letter-spacing:.05em;z-index:500; }
 body.view-mode .view-banner { display:block; }
+
+.confetti-piece{position:fixed;pointer-events:none;z-index:9999;animation:confettiFall linear forwards}
+@keyframes confettiFall{
+  0%{opacity:1;transform:translateY(0) rotate(0deg)}
+  80%{opacity:1}
+  100%{opacity:0;transform:translateY(105vh) rotate(540deg)}
+}
 </style>
 </head>
 <body>
@@ -392,6 +399,7 @@ body.view-mode .view-banner { display:block; }
     <button class="drawer-btn" onclick="goPage('todo',this)">To-Do</button>
     <button class="drawer-btn" onclick="goPage('tracker',this)">Gastos</button>
     <button class="drawer-btn" onclick="goPage('conversor',this)">Conversor</button>
+    <button class="drawer-btn" onclick="goPage('frases',this)">Frases</button>
     <button class="drawer-btn" onclick="goPage('ahorro',this)">Ahorro</button>
   </nav>
   <div class="drawer-footer">
@@ -407,12 +415,18 @@ body.view-mode .view-banner { display:block; }
   <p class="hero-sub">20 Abril – 19 Mayo · 30 días · 🌸</p>
   <div class="hero-route">🇦🇷 EZE → 🇪🇸 Barcelona → 🇮🇹 Roma · Florencia · Venecia → 🇫🇷 París → 🇬🇧 Londres → 🇪🇸 Barcelona → 🇦🇷 EZE</div>
   <div class="cities-grid">
-    <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Barcelona</div><div class="city-dates">21–23 Abr · 3 días</div><div class="city-tags"><span class="tag">Playa</span><span class="tag">Gaudí</span><span class="tag">Noche</span></div></div>
-    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Roma</div><div class="city-dates">24–29 Abr · 6 días</div><div class="city-tags"><span class="tag">Coliseo</span><span class="tag">Vaticano</span><span class="tag">Trastevere</span></div></div>
-    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Florencia</div><div class="city-dates">30 Abr–3 May · 4 días</div><div class="city-tags"><span class="tag">Uffizi</span><span class="tag">El David</span><span class="tag">Cúpula</span></div></div>
-    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Venecia</div><div class="city-dates">4–7 May · 4 días</div><div class="city-tags"><span class="tag">Canales</span><span class="tag">Góndola</span><span class="tag">Burano</span></div></div>
-    <div class="city-card"><div class="city-flag">🇫🇷</div><div class="city-name">París</div><div class="city-dates">7–9 May · 3 días</div><div class="city-tags"><span class="tag">Eiffel</span><span class="tag">Louvre</span><span class="tag">Oberkampf</span></div></div>
-    <div class="city-card"><div class="city-flag">🇬🇧</div><div class="city-name">Londres</div><div class="city-dates">11–16 May · 6 días</div><div class="city-tags"><span class="tag">HP Tour</span><span class="tag">Shoreditch</span><span class="tag">West End</span></div></div>
+    <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Barcelona</div><div class="city-dates">21–23 Abr · 3 días</div><div class="city-tags"><span class="tag">Playa</span><span class="tag">Gaudí</span><span class="tag">Noche</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">🌤 <span style="font-weight:500;color:var(--text-soft)">22°C</span> <span>· Soleado · Primavera</span></div></div>
+    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Roma</div><div class="city-dates">24–29 Abr · 6 días</div><div class="city-tags"><span class="tag">Coliseo</span><span class="tag">Vaticano</span><span class="tag">Trastevere</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">☀️ <span style="font-weight:500;color:var(--text-soft)">24°C</span> <span>· Soleado · Cálido</span></div></div>
+    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Florencia</div><div class="city-dates">30 Abr–3 May · 4 días</div><div class="city-tags"><span class="tag">Uffizi</span><span class="tag">El David</span><span class="tag">Cúpula</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">🌤 <span style="font-weight:500;color:var(--text-soft)">23°C</span> <span>· Soleado · Agradable</span></div></div>
+    <div class="city-card"><div class="city-flag">🇮🇹</div><div class="city-name">Venecia</div><div class="city-dates">4–7 May · 4 días</div><div class="city-tags"><span class="tag">Canales</span><span class="tag">Góndola</span><span class="tag">Burano</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">⛅ <span style="font-weight:500;color:var(--text-soft)">21°C</span> <span>· Parcial · Húmedo</span></div></div>
+    <div class="city-card"><div class="city-flag">🇫🇷</div><div class="city-name">París</div><div class="city-dates">7–9 May · 3 días</div><div class="city-tags"><span class="tag">Eiffel</span><span class="tag">Louvre</span><span class="tag">Oberkampf</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">🌥 <span style="font-weight:500;color:var(--text-soft)">18°C</span> <span>· Nublado · Fresco</span></div></div>
+    <div class="city-card"><div class="city-flag">🇬🇧</div><div class="city-name">Londres</div><div class="city-dates">11–16 May · 6 días</div><div class="city-tags"><span class="tag">HP Tour</span><span class="tag">Shoreditch</span><span class="tag">West End</span></div>
+<div style="margin-top:.6rem;display:flex;align-items:center;gap:.4rem;font-size:12px;color:var(--text-muted)">🌦 <span style="font-weight:500;color:var(--text-soft)">15°C</span> <span>· Variable · Fresco</span></div></div>
 
     <div class="city-card"><div class="city-flag">🇪🇸</div><div class="city-name">Barcelona</div><div class="city-dates">17–19 May · 3 días</div><div class="city-tags"><span class="tag">Playa</span><span class="tag">Tax Free</span><span class="tag">Opium</span></div></div>
   </div>
@@ -577,7 +591,7 @@ body.view-mode .view-banner { display:block; }
 <div id="page-vuelos" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Vuelos <em>& Transporte</em></h2>
-  <p class="section-desc">Los precios se editan desde <b>Presupuesto</b> y se reflejan acá automáticamente.</p>
+  <div id="vuelos-resumen" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"></div>
   <div class="vuelos-list" id="vuelos-list"></div>
   <div class="nota-card" style="margin-top:1rem"><div class="nota-icon">💡</div><div class="nota-text">Mayo = temporada media → mejores precios que verano. Buscar en Google Flights y Skyscanner. Los precios varían — consultar actualizados.</div></div>
 </main>
@@ -587,7 +601,7 @@ body.view-mode .view-banner { display:block; }
 <div id="page-alojamiento" class="page">
 <main>
   <h2 class="section-title" style="margin-top:1.5rem">Alojamiento <em>Airbnb con cocina</em></h2>
-  <p class="section-desc">Los precios se editan desde <b>Presupuesto</b> y se reflejan acá. El precio por noche se recalcula automáticamente.</p>
+  <div id="aloj-resumen" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem"></div>
   <div class="aloj-grid" id="aloj-grid"></div>
 </main>
 </div>
@@ -751,6 +765,24 @@ body.view-mode .view-banner { display:block; }
 </main>
 </div>
 
+<!-- ════════ FRASES ════════ -->
+<div id="page-frases" class="page">
+<main>
+  <h2 class="section-title" style="margin-top:1.5rem">Frases <em>útiles</em></h2>
+  <p class="section-desc">Lo esencial para sobrevivir en cada país. Tocá cualquier frase para copiarla.</p>
+
+  <div class="tabs" style="margin-bottom:1.5rem">
+    <button class="tab-btn active" onclick="showFrasesTab('it',this)">Italiano</button>
+    <button class="tab-btn" onclick="showFrasesTab('fr',this)">Francés</button>
+    <button class="tab-btn" onclick="showFrasesTab('en',this)">Inglés</button>
+  </div>
+
+  <div id="frases-it" class="tab-panel"></div>
+  <div id="frases-fr" class="tab-panel"></div>
+  <div id="frases-en" class="tab-panel"></div>
+</main>
+</div>
+
 <!-- ════════ AHORRO ════════ -->
 <div id="page-ahorro" class="page">
 <main>
@@ -850,6 +882,7 @@ function showTodoTab(name, btn){
 renderResumenReservas();
 renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
 }
 function renderResumenReservas(){
@@ -873,6 +906,23 @@ function renderResumenReservas(){
   };
   el.innerHTML = card('Vuelos', resVuelos, totalVuelos) + card('Airbnbs', resAloj, totalAloj);
 }
+function toggleDia(dia){
+  const body = document.getElementById('tl-body-'+dia);
+  const arrow = document.getElementById('tl-arrow-'+dia);
+  if(!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if(arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function openCurrentDay(){
+  // Auto-open today's day based on trip dates
+  const tripStart = new Date('2027-04-20');
+  const now = new Date();
+  const dayNum = Math.floor((now - tripStart) / 86400000) + 1;
+  if(dayNum >= 1 && dayNum <= 30) toggleDia(dayNum);
+}
+
 function showItinTab(name, btn){
   document.querySelectorAll('#page-itinerario .tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('#page-itinerario .tab-btn').forEach(b=>b.classList.remove('active'));
@@ -903,7 +953,7 @@ function goPage(name,btn){
   btn.classList.add('active');
   window.scrollTo(0,0);
   closeDrawer();
-  if(name==='itinerario') renderItinerario();
+  if(name==='itinerario'){renderItinerario();setTimeout(openCurrentDay,100);}
   if(name==='presupuesto'){loadPpto();renderPresupuesto();}
   if(name==='vuelos') renderVuelos();
   if(name==='alojamiento') renderAlojamiento();
@@ -911,11 +961,14 @@ function goPage(name,btn){
 renderResumenReservas();
 renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();}
   if(name==='tracker') renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
   if(name==='conversor'){fetchRates();renderConversor();
+renderFrasesInit();
 fetchRates();}
 }
 function showTab(name,btn){
@@ -992,15 +1045,20 @@ function renderItinerario(){
       lastCiudad=ciudad;
     }
     const tipoCls = d.hp?'hp':d.noche?'noche':d.vuelo?'vuelo':'';
-    html+=`<div class="tl-day ${d.hp?'hp':d.vuelo?'vuelo':''}">
-      <div class="tl-day-header">
-        <span class="tl-num">Día ${d.dia}</span>
-        <span class="tl-fecha">${d.fecha}</span>
-        <span class="tl-tipo-badge ${tipoCls}">${d.tipo}</span>
+    html+=`<div class="tl-day ${d.hp?'hp':d.vuelo?'vuelo':''}" style="cursor:pointer" onclick="toggleDia(${d.dia})">
+      <div class="tl-day-header" style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          <span class="tl-num">Día ${d.dia}</span>
+          <span class="tl-fecha">${d.fecha}</span>
+          <span class="tl-tipo-badge ${tipoCls}">${d.tipo}</span>
+        </div>
+        <span id="tl-arrow-${d.dia}" style="color:var(--text-muted);font-size:11px;transition:transform .25s;flex-shrink:0">▼</span>
       </div>
-      <div class="tl-desc">${d.desc}</div>
-      ${d.tip?`<div class="tl-tip">${d.tip}</div>`:''}
-      <div class="tl-aloj">📍 ${d.aloj}</div>
+      <div id="tl-body-${d.dia}" style="display:none">
+        <div class="tl-desc" style="margin-top:.5rem">${d.desc}</div>
+        ${d.tip?`<div class="tl-tip">${d.tip}</div>`:''}
+        <div class="tl-aloj">📍 ${d.aloj}</div>
+      </div>
     </div>`;
   });
   document.getElementById('timeline-container').innerHTML=html;
@@ -1131,12 +1189,34 @@ function renderVuelos(){
       <div class="vuelo-fecha">${v.fecha}</div>
       <div style="text-align:right">
         <div class="vuelo-precio">${fu(precio)}<span style="font-size:11px;color:var(--text-muted)"> /p</span></div>
-        <button onclick="toggleRes('vuelos',${i})" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;${RES_STATE.vuelos[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
+        <button onclick="toggleRes('vuelos',${i},event)" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;${RES_STATE.vuelos[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
           ${RES_STATE.vuelos[i]?'✅ Reservado':'⏳ Pendiente'}
         </button>
       </div>
     </div>`;
   }).join('');
+  // Resumen cards
+  const _elV=document.getElementById('vuelos-resumen');
+  if(_elV){
+    const _totV=VUELOS.reduce((s,v)=>s+v.p1,0);
+    const _resV=Object.values(RES_STATE.vuelos).filter(Boolean).length;
+    _elV.innerHTML=`
+      <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Total vuelos</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--rose-dark)">${fu(_totV)}</div>
+        <div style="font-size:11px;color:var(--text-muted)">por persona</div>
+      </div>
+      <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Tramos</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--text)">${VUELOS.length}</div>
+        <div style="font-size:11px;color:var(--text-muted)">vuelos y trenes</div>
+      </div>
+      <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem">
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Reservados</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:${_resV===VUELOS.length?'#3a7034':'var(--text)'}">${_resV}/${VUELOS.length}</div>
+        <div style="font-size:11px;color:var(--text-muted)">${_resV===VUELOS.length?'✅ todo listo':'pendientes'}</div>
+      </div>`;
+  }
 }
 
 // ─── ALOJAMIENTO DATA ───
@@ -1164,7 +1244,7 @@ function renderAlojamiento(){
         <div class="aloj-row"><span class="aloj-lbl">Noches</span><span class="aloj-val">${a.noches}</span></div>
         <div class="aloj-row"><span class="aloj-lbl">Por persona/noche</span><span class="aloj-val">~U$S ${perNight}</span></div>
         <div class="aloj-row"><span class="aloj-lbl">Total por persona</span><span class="aloj-val" style="color:var(--rose-dark)">${fu(totalPerson)}</span></div>
-        <button onclick="toggleRes('alojamiento',${i})" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;margin-bottom:.6rem;${RES_STATE.alojamiento[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
+        <button onclick="toggleRes('alojamiento',${i},event)" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;margin-bottom:.6rem;${RES_STATE.alojamiento[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
           ${RES_STATE.alojamiento[i]?'✅ Confirmado':'⏳ Pendiente'}
         </button>
         <div style="margin-top:.4rem">
@@ -1178,7 +1258,16 @@ function renderAlojamiento(){
       </div>
     </div>`;
   }).join('');
-}
+
+  const _elA=document.getElementById('aloj-resumen');
+  if(_elA){
+    const _totN=ALOJAMIENTOS.reduce((s,a)=>s+a.noches,0);
+    const _totA=ALOJAMIENTOS.reduce((s,a)=>s+a.noches*a.precio,0);
+    const _resA=Object.values(RES_STATE.alojamiento).filter(Boolean).length;
+    _elA.innerHTML='<div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Total alojamiento</div><div style="font-family:Cormorant Garamond,serif;font-size:1.8rem;color:var(--rose-dark)">'+fu(_totA)+'</div><div style="font-size:11px;color:var(--text-muted)">por persona</div></div>'
+    +'<div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Total noches</div><div style="font-family:Cormorant Garamond,serif;font-size:1.8rem;color:var(--text)">'+_totN+'</div><div style="font-size:11px;color:var(--text-muted)">en 7 ciudades</div></div>'
+    +'<div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:14px;padding:.75rem 1.25rem"><div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Confirmados</div><div style="font-family:Cormorant Garamond,serif;font-size:1.8rem;color:'+(_resA===ALOJAMIENTOS.length?'#3a7034':'var(--text)')+'">'+_resA+'/'+ALOJAMIENTOS.length+'</div><div style="font-size:11px;color:var(--text-muted)">'+(_resA===ALOJAMIENTOS.length?'✅ todo listo':'pendientes')+'</div></div>';
+  }}
 
 // ─── MUST DO DATA ───
 const MUSTDO=[
@@ -1803,22 +1892,66 @@ function loadRes(){
     }
   }catch(e){}
 }
-function toggleRes(tipo, idx){
-  RES_STATE[tipo][idx] = !RES_STATE[tipo][idx];
+function launchConfetti(){
+  const colors=['#c47a8a','#f2c4ce','#e8a0b0','#c9a96e','#ffffff','#f9e4ea','#d4a8b8'];
+  const count=60;
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    const size=6+Math.random()*8;
+    const startX=Math.random()*window.innerWidth;
+    const startY=-20;
+    const duration=1.2+Math.random()*1.5;
+    const delay=Math.random()*0.6;
+    const drift=(Math.random()-0.5)*200;
+    el.style.cssText=`
+      position:fixed;
+      left:${startX}px;
+      top:${startY}px;
+      width:${size}px;
+      height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      pointer-events:none;
+      z-index:9999;
+      animation:confettiFall ${duration}s ${delay}s linear forwards;
+      transform:translateX(${drift}px);
+    `;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),(duration+delay)*1000+100);
+  }
+}
+function toggleRes(tipo, idx, ev){
+  const wasReserved = RES_STATE[tipo][idx];
+  RES_STATE[tipo][idx] = !wasReserved;
   saveRes();
   renderVuelos();
   renderAlojamiento();
   renderResumenReservas();
   showSaved();
+  if(!wasReserved){
+    // Just got reserved — confetti!
+    launchConfetti();
+  }
 }
 function toggleCheck(id){
-  CL_STATE[id] = !CL_STATE[id];
+  const wasDone = CL_STATE[id];
+  CL_STATE[id] = !wasDone;
   saveChecklist();
+  if(!wasDone){
+    const cat = CHECKLIST.find(c=>c.items.some(i=>i.id===id));
+    if(cat && cat.items.every(i=>CL_STATE[i.id])){
+      setTimeout(()=>{
+        launchConfetti();
+        const t=document.createElement('div');
+        t.style.cssText='position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) scale(.9);background:rgba(253,246,240,.97);backdrop-filter:blur(16px);color:var(--text);padding:1rem 2rem;border-radius:24px;font-family:Jost,sans-serif;font-size:13px;z-index:400;text-align:center;box-shadow:0 8px 32px rgba(196,122,138,.2);border:1px solid rgba(196,122,138,.25);transition:transform .3s cubic-bezier(.16,1,.3,1),opacity .3s;white-space:nowrap';
+        setTimeout(()=>t.style.transform='translateX(-50%) scale(1)',10);
+        t.innerHTML='<div style="font-size:1.4rem;margin-bottom:.2rem">✦</div><div style="font-weight:500;color:var(--rose-dark);letter-spacing:.02em">¡Categoría completa!</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;letter-spacing:.05em">'+cat.categoria.replace(/[⚠️📋🛂🛍✅]/g,'').trim()+'</div>';
+        document.body.appendChild(t);
+        setTimeout(()=>{t.style.transition='opacity .4s';t.style.opacity='0';setTimeout(()=>t.remove(),400);},2500);
+      },100);
+    }
+  }
   renderChecklist();
-renderResumenReservas();
-renderTracker();
-renderConversor();
-fetchRates();
   showSaved();
 }
 
@@ -1912,6 +2045,7 @@ function addGasto(){
   document.getElementById('tr-desc').value = '';
   renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
 }
 
@@ -1920,6 +2054,7 @@ function deleteGasto(id){
   saveGastos();
   renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
 }
 
@@ -1928,7 +2063,7 @@ function renderTrackerDiaSelect(){
   if(!sel) return;
   const current = sel.value;
   sel.innerHTML = '<option value="">— Elegí un día —</option>' +
-    ITINERARIO.map((d,i) => {
+    ITINERARIO.filter(d=>d.dia>1).map((d,i) => {
       const label = `Día ${d.dia} · ${d.fecha} · ${d.ciudad}`;
       return `<option value="${d.dia}" ${d.dia==current?'selected':''}>${label}</option>`;
     }).join('');
@@ -2050,6 +2185,7 @@ function setTrackerCity(city, btn){
   trackerCityFilter = city;
   renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
 }
 
@@ -2071,6 +2207,7 @@ async function fetchRates(){
       ratesLoaded = true;
       ratesTimestamp = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
       renderConversor();
+renderFrasesInit();
 fetchRates();
     }
   } catch(e){
@@ -2214,6 +2351,195 @@ const CIUDADES_RUTA = [
   { nombre:'Barcelona', coords:[41.3951, 2.1834], emoji:'🇪🇸', dias:'17–19 May · regreso', color:'#e8765a' },
 ];
 
+
+// ─── FRASES ÚTILES ───
+const FRASES = {
+  es: {
+    nombre: 'Español · Barcelona',
+    categorias: [
+      { titulo: 'Básico', items: [
+        ['Hola / Buenas', 'Hola / Buenas'],
+        ['Gracias', 'Gràcies (en catalán)'],
+        ['Por favor', 'Si us plau (catalán) / Por favor'],
+        ['Perdón / Disculpe', 'Perdón / Disculpe'],
+        ['¿Habla inglés?', '¿Habla inglés?'],
+        ['No entiendo', 'No entiendo'],
+      ]},
+      { titulo: 'En el restaurante', items: [
+        ['Una mesa para dos', 'Una mesa para dos, por favor'],
+        ['La cuenta, por favor', 'La cuenta, por favor'],
+        ['¿Está incluido el servicio?', '¿Está incluido el servicio?'],
+        ['Sin gluten', 'Sin gluten'],
+        ['Agua sin gas', 'Agua sin gas, por favor'],
+        ['¿Qué recomienda?', '¿Qué nos recomienda?'],
+      ]},
+      { titulo: 'Transporte', items: [
+        ['¿Dónde está el metro?', '¿Dónde está el metro?'],
+        ['Un billete sencillo', 'Un billete sencillo, por favor'],
+        ['¿Cuánto cuesta?', '¿Cuánto cuesta?'],
+        ['¿Para dónde va este tren?', '¿Para dónde va este tren?'],
+      ]},
+      { titulo: 'De compras / Tax Free', items: [
+        ['¿Hacen Tax Free?', '¿Hacen Tax Free?'],
+        ['¿Puedo pagar con tarjeta?', '¿Puedo pagar con tarjeta?'],
+        ['¿Me da el recibo?', '¿Me da el recibo, por favor?'],
+        ['¿Tienen talla S/M/L?', '¿Tienen talla S/M/L?'],
+      ]},
+    ]
+  },
+  it: {
+    nombre: 'Italiano · Roma, Florencia, Venecia',
+    categorias: [
+      { titulo: 'Básico', items: [
+        ['Hola (informal)', 'Ciao'],
+        ['Buenos días', 'Buongiorno'],
+        ['Buenas noches', 'Buonasera'],
+        ['Gracias', 'Grazie'],
+        ['De nada', 'Prego'],
+        ['Por favor', 'Per favore'],
+        ['Perdón', 'Scusa / Mi scusi'],
+        ['¿Habla inglés?', 'Parla inglese?'],
+        ['No entiendo', 'Non capisco'],
+        ['¿Cuánto cuesta?', 'Quanto costa?'],
+      ]},
+      { titulo: 'En el restaurante', items: [
+        ['Una mesa para dos', 'Un tavolo per due, per favore'],
+        ['La cuenta', 'Il conto, per favore'],
+        ['¿Está incluido el servicio?', 'Il servizio è incluso?'],
+        ['Agua sin gas', 'Acqua naturale, per favore'],
+        ['Agua con gas', 'Acqua frizzante'],
+        ['Un café', 'Un caffè, per favore'],
+        ['¿Qué recomienda?', 'Cosa ci consiglia?'],
+        ['Está muy rico', 'È buonissimo!'],
+      ]},
+      { titulo: 'Transporte', items: [
+        ['¿Dónde está...?', 'Dov&#39;è...?'],
+        ['Un biglietto', 'Un biglietto, per favore'],
+        ['¿A qué hora sale?', 'A che ora parte?'],
+        ['¿Dónde está la parada?', 'Dov&#39;è la fermata?'],
+        ['Taxi / vaporetto', 'Taxi / vaporetto'],
+      ]},
+      { titulo: 'Emergencias', items: [
+        ['Ayuda', 'Aiuto!'],
+        ['Llame a la policía', 'Chiami la polizia!'],
+        ['Necesito un médico', 'Ho bisogno di un medico'],
+        ['Me robaron', 'Mi hanno derubato'],
+      ]},
+    ]
+  },
+  fr: {
+    nombre: 'Francés · París',
+    categorias: [
+      { titulo: 'Básico', items: [
+        ['Hola', 'Bonjour'],
+        ['Buenas noches', 'Bonsoir'],
+        ['Gracias', 'Merci'],
+        ['Por favor', 'S&#39;il vous plaît'],
+        ['Perdón', 'Excusez-moi / Pardon'],
+        ['¿Habla inglés?', 'Parlez-vous anglais?'],
+        ['No entiendo', 'Je ne comprends pas'],
+        ['¿Cuánto cuesta?', 'Combien ça coûte?'],
+        ['De nada', 'De rien / Je vous en prie'],
+      ]},
+      { titulo: 'En el restaurante', items: [
+        ['Una mesa para dos', 'Une table pour deux, s&#39;il vous plaît'],
+        ['La cuenta', 'L&#39;addition, s&#39;il vous plaît'],
+        ['Agua sin gas', 'Une carafe d\'eau, s&#39;il vous plaît'],
+        ['Un café', 'Un café, s&#39;il vous plaît'],
+        ['¿Qué recomienda?', 'Qu&#39;est-ce que vous recommandez?'],
+        ['Está muy rico', 'C&#39;est délicieux!'],
+      ]},
+      { titulo: 'Transporte', items: [
+        ['¿Dónde está el metro?', 'Où est le métro?'],
+        ['Un ticket', 'Un ticket, s&#39;il vous plaît'],
+        ['¿Dónde está...?', 'Où est...?'],
+        ['A la izquierda / derecha', 'À gauche / à droite'],
+        ['Todo recto', 'Tout droit'],
+      ]},
+      { titulo: 'Frases clave', items: [
+        ['Siempre saludar al entrar', '¡Bonjour! al entrar a cualquier local'],
+        ['No mezclar idiomas', 'Empezar siempre en francés aunque sea mal'],
+        ['¿Habla español?', 'Parlez-vous espagnol?'],
+      ]},
+    ]
+  },
+  en: {
+    nombre: 'Inglés · Londres',
+    categorias: [
+      { titulo: 'Básico', items: [
+        ['Hola', 'Hi / Hello'],
+        ['¿Cómo estás?', 'How are you? / You alright?'],
+        ['Bien, gracias', 'Good, thanks!'],
+        ['Por favor', 'Please'],
+        ['Gracias', 'Thank you / Cheers'],
+        ['Perdón', 'Sorry / Excuse me'],
+        ['¿Puede repetir?', 'Could you say that again?'],
+        ['No entiendo', 'I don&#39;t understand'],
+      ]},
+      { titulo: 'En el restaurante / pub', items: [
+        ['Una mesa para dos', 'Table for two, please'],
+        ['La cuenta', 'Could we get the bill, please?'],
+        ['¿Está incluido el servicio?', 'Is service included?'],
+        ['Tap water', 'Could I get some tap water?'],
+        ['Una pinta de cerveza', 'A pint of lager, please'],
+        ['¿Qué recomienda?', 'What do you recommend?'],
+      ]},
+      { titulo: 'Transporte / Tube', items: [
+        ['¿Dónde está el Tube?', 'Where\'s the nearest Tube station?'],
+        ['Un ticket a...', 'A ticket to... please'],
+        ['¿Qué línea tomo?', 'Which line should I take?'],
+        ['Oyster card', 'Where can I get an Oyster card?'],
+        ['¿Va a...?', 'Does this go to...?'],
+      ]},
+      { titulo: 'Frases muy británicas', items: [
+        ['Cheers', 'Gracias / Salud / Chau — sirve para todo'],
+        ['Lovely', 'Muy lindo / perfecto'],
+        ['Brilliant!', '¡Genial! / ¡Perfecto!'],
+        ['Queue', 'La fila — siempre respetar la queue'],
+        ['Mind the gap', 'Cuidado con el espacio (Tube)'],
+      ]},
+    ]
+  },
+};
+
+function showFrasesTab(lang, btn){
+  document.querySelectorAll('#page-frases .tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#page-frases .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('frases-'+lang).classList.add('active');
+  btn.classList.add('active');
+  renderFrases(lang);
+}
+
+function copyFrase(text){
+  navigator.clipboard.writeText(text).then(()=>showSaved()).catch(()=>{});
+}
+
+function renderFrases(lang){
+  const data = FRASES[lang];
+  if(!data) return;
+  const el = document.getElementById('frases-'+lang);
+  if(el.innerHTML) return; // already rendered
+  
+  el.innerHTML = `<p style="font-size:12px;color:var(--text-muted);margin-bottom:1.25rem;background:var(--blush);padding:.5rem 1rem;border-radius:10px">
+    Tocá cualquier frase para copiarla al portapapeles 📋
+  </p>` + data.categorias.map(cat=>`
+    <div style="margin-bottom:1.5rem">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;margin-bottom:.75rem;color:var(--text)">${cat.titulo}</h3>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        ${cat.items.map(([es, local])=>`
+          <div onclick="copyFrase('${local.replace(/'/g, "\'")}'); this.style.background='var(--blush)'; setTimeout(()=>this.style.background='',800)"
+            style="display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:background .2s;gap:1rem">
+            <span style="font-size:13px;color:var(--text-muted);min-width:140px">${es}</span>
+            <span style="font-size:14px;font-weight:500;color:var(--text);text-align:right">${local}</span>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function renderFrasesInit(){
+  renderFrases('it');
+}
+
 // ─── INIT ───
 loadFromStorage();
 loadPpto();
@@ -2231,6 +2557,7 @@ renderChecklist();
 renderResumenReservas();
 renderTracker();
 renderConversor();
+renderFrasesInit();
 fetchRates();
 renderInputs();
 renderAhorro();
