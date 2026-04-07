@@ -3004,17 +3004,19 @@ async function supaUpload(file, path){
 }
 
 async function supaGetSignedUrl(path){
-  const res = await fetch(`${SUPA_URL}/storage/v1/object/sign/${SUPA_BUCKET}/${path}`, {
+  const res = await fetch(SUPA_URL+'/storage/v1/object/sign/'+SUPA_BUCKET+'/'+path, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${SUPA_KEY}`,
+      'Authorization': 'Bearer '+SUPA_KEY,
       'apikey': SUPA_KEY,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({expiresIn: 3600})
   });
   const data = await res.json();
-  return `${SUPA_URL}${data.signedURL}`;
+  if(data.error) throw new Error(data.error);
+  // Return full URL
+  return SUPA_URL + '/storage/v1' + data.signedURL;
 }
 
 async function supaDelete(path){
@@ -3075,7 +3077,6 @@ async function openFile(keyOrPath){
     const fileInfo = DOCS_FILES[keyOrPath];
     const path = fileInfo && fileInfo.path ? fileInfo.path : keyOrPath;
     const url = await supaGetSignedUrl(path);
-    // Create download link
     const a = document.createElement('a');
     a.href = url;
     a.download = fileInfo ? fileInfo.name : 'archivo';
@@ -3083,7 +3084,7 @@ async function openFile(keyOrPath){
     document.body.appendChild(a);
     a.click();
     setTimeout(()=>a.remove(), 100);
-  }catch(e){ alert('Error al abrir el archivo'); }
+  }catch(e){ alert('Error: '+e.message); }
 }
 
 async function deleteFile(keyOrPath){
