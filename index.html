@@ -2901,12 +2901,6 @@ const DOCS_CATEGORIES = [
     ]
   },
   {
-    id: 'archivos',
-    titulo: 'Archivos subidos',
-    icon: '📎',
-    campos: []
-  },
-  {
     id: 'varios',
     titulo: 'Varios',
     icon: '📋',
@@ -2936,67 +2930,53 @@ function renderDocs(){
   const container = document.getElementById('docs-container');
   if(!container) return;
 
-  // Progress
-  const totalCampos = DOCS_CATEGORIES.reduce((s,c)=>s+c.campos.length,0);
-  const filled = Object.values(DOCS_DATA).filter(v=>v&&v.trim()).length;
-  const pct = Math.round(filled/totalCampos*100);
+  const totalCampos = DOCS_CATEGORIES.reduce((s,c)=>s+c.campos.length, 0);
+  const filled = DOCS_CATEGORIES.reduce((s,c)=>s+c.campos.filter(f=>DOCS_DATA[f.id]&&DOCS_DATA[f.id].trim()).length, 0);
+  const pct = totalCampos > 0 ? Math.round(filled/totalCampos*100) : 0;
 
-  let html = `
-    <div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem">Completado</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--rose-dark)">${filled}/${totalCampos}</div>
-      </div>
-      <div style="height:6px;background:var(--blush);border-radius:6px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:linear-gradient(to right,var(--rose),var(--rose-dark));border-radius:6px;transition:width .6s ease"></div>
-      </div>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:.4rem;text-align:right">${pct}% completado</div>
-    </div>`;
+  let html = '<div style="background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;margin-bottom:1.5rem">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem">'
+    + '<div style="font-family:Cormorant Garamond,serif;font-size:1.3rem">Completado</div>'
+    + '<div style="font-family:Cormorant Garamond,serif;font-size:1.5rem;color:var(--rose-dark)">'+filled+'/'+totalCampos+'</div>'
+    + '</div>'
+    + '<div style="height:6px;background:var(--blush);border-radius:6px;overflow:hidden">'
+    + '<div style="height:100%;width:'+pct+'%;background:linear-gradient(to right,var(--rose),var(--rose-dark));border-radius:6px;transition:width .6s ease"></div>'
+    + '</div>'
+    + '<div style="font-size:11px;color:var(--text-muted);margin-top:.4rem;text-align:right">'+pct+'% completado</div>'
+    + '</div>';
 
-  DOCS_CATEGORIES.forEach(cat => {
-    const catFilled = cat.campos.filter(c=>DOCS_DATA[c.id]&&DOCS_DATA[c.id].trim()).length;
-    html += `
-      <details class="inputs-panel" style="margin-bottom:1rem" ${catFilled > 0 ? 'open' : ''}>
-        <summary style="display:flex;align-items:center;gap:.75rem">
-          <span style="font-size:1.2rem">${cat.icon}</span>
-          <span>${cat.titulo}</span>
-          <span style="margin-left:auto;font-size:11px;padding:2px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">${catFilled}/${cat.campos.length}</span>
-        </summary>
-        <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:1rem">
-          ${cat.id === 'archivos' ? `
-        <!-- File upload section -->
-        <div style="margin-top:.5rem">
-          <label style="display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.875rem;background:var(--blush);border:2px dashed var(--border);border-radius:12px;cursor:pointer;font-size:13px;color:var(--text-soft);transition:background .2s" onmouseover="this.style.background='rgba(196,122,138,.1)'" onmouseout="this.style.background='var(--blush)'">
-            <span style="font-size:1.3rem">📎</span>
-            <span>Subir archivo (PDF, foto, imagen)</span>
-            <input type="file" accept=".pdf,.jpg,.jpeg,.png,.heic" onchange="handleFileUpload(this)" style="display:none">
-          </label>
-          <div id="upload-status" style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:.4rem"></div>
-          <div style="margin-top:.75rem;display:flex;flex-direction:column;gap:.5rem">
-            ${Object.entries(DOCS_FILES).map(([path, info])=>`
-              <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:10px">
-                <span style="font-size:1.1rem">${info.type&&info.type.includes('pdf')?'📄':'🖼'}</span>
-                <div style="flex:1;min-width:0">
-                  <div style="font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${info.name}</div>
-                  <div style="font-size:11px;color:var(--text-muted)">${info.date} · ${(info.size/1024).toFixed(0)}KB</div>
-                </div>
-                <button onclick="openFile('${path}')" style="font-size:11px;padding:3px 10px;border-radius:8px;background:var(--blush);border:1px solid var(--border);cursor:pointer;color:var(--text-soft);white-space:nowrap">Ver</button>
-                <button onclick="deleteFile('${path}')" style="font-size:11px;padding:3px 8px;border-radius:8px;background:none;border:1px solid #f0a0a0;cursor:pointer;color:#c05050">✕</button>
-              </div>`).join('')}
-            ${Object.keys(DOCS_FILES).length === 0 ? '<p style="font-size:12px;color:var(--text-muted);text-align:center;padding:.5rem">No hay archivos subidos todavía</p>' : ''}
-          </div>
-        </div>
-      ` : cat.campos.map(campo=>`
-            <div>
-              <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:3px">${campo.label}</label>
-              <input type="text"
-                value="${(DOCS_DATA[campo.id]||'').replace(/"/g,'&quot;')}"
-                placeholder="${campo.placeholder}"
-                onchange="updateDoc('${campo.id}',this.value)"
-                style="width:100%;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-family:'Jost';font-size:13px;color:var(--text)">
-            </div>`).join('')}
-        </div>
-      </details>`;
+  DOCS_CATEGORIES.forEach(function(cat){
+    const catFilled = cat.campos.filter(function(c){ return DOCS_DATA[c.id]&&DOCS_DATA[c.id].trim(); }).length;
+    html += '<details class="inputs-panel" style="margin-bottom:1rem"'+(catFilled>0?' open':'')+'>'
+      + '<summary style="display:flex;align-items:center;gap:.75rem">'
+      + '<span style="font-size:1.2rem">'+cat.icon+'</span>'
+      + '<span>'+cat.titulo+'</span>'
+      + '<span style="margin-left:auto;font-size:11px;padding:2px 10px;border-radius:10px;background:var(--blush);color:var(--rose-dark)">'+catFilled+'/'+cat.campos.length+'</span>'
+      + '</summary>'
+      + '<div style="display:flex;flex-direction:column;gap:.5rem;margin-top:1rem">';
+
+    cat.campos.forEach(function(campo){
+      const fileKey = 'file_'+campo.id;
+      const fi = DOCS_FILES[fileKey];
+      const val = (DOCS_DATA[campo.id]||'').replace(/"/g,'&quot;');
+
+      html += '<div>'
+        + '<label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:3px">'+campo.label+'</label>'
+        + '<div style="display:flex;gap:.5rem;align-items:center">'
+        + '<input type="text" data-id="'+campo.id+'" value="'+val+'" placeholder="'+campo.placeholder+'" onchange="updateDoc(this.dataset.id,this.value)" style="flex:1;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-family:Jost,sans-serif;font-size:13px;color:var(--text)">';
+
+      if(fi){
+        html += '<button data-key="'+fileKey+'" onclick="openFile(this.dataset.key)" style="flex-shrink:0;padding:6px 10px;border-radius:10px;border:1px solid var(--rose-dark);background:var(--blush);cursor:pointer;font-size:13px" title="'+fi.name+'">📎</button>'
+          + '<button data-key="'+fileKey+'" onclick="deleteFile(this.dataset.key)" style="flex-shrink:0;padding:6px 8px;border-radius:10px;border:1px solid #f0a0a0;background:none;cursor:pointer;font-size:12px;color:#c05050">✕</button>';
+      } else {
+        html += '<label style="flex-shrink:0;padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--white);cursor:pointer;font-size:13px;color:var(--text-muted)" title="Adjuntar archivo">📎'
+          + '<input type="file" data-key="'+fileKey+'" accept=".pdf,.jpg,.jpeg,.png,.heic" onchange="handleFileUploadField(this,this.dataset.key)" style="display:none"></label>';
+      }
+
+      html += '</div></div>';
+    });
+
+    html += '</div></details>';
   });
 
   container.innerHTML = html;
@@ -3071,17 +3051,47 @@ async function handleFileUpload(input){
   }
 }
 
-async function openFile(path){
+async function handleFileUploadField(input, fieldKey){
+  const file = input.files[0];
+  if(!file) return;
+  // Show loading state
+  const label = input.closest('label');
+  if(label) label.textContent = '⏳';
   try{
+    const path = `guada/${fieldKey}_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    await supaUpload(file, path);
+    DOCS_FILES[fieldKey] = { name: file.name, size: file.size, type: file.type, path: path, date: new Date().toLocaleDateString('es-AR') };
+    saveDocsFiles();
+    showSaved();
+    renderDocs();
+  } catch(e){
+    alert('Error al subir: ' + e.message);
+    if(label) label.innerHTML = '📎<input type="file" accept=".pdf,.jpg,.jpeg,.png,.heic" onchange="handleFileUploadField(this,\'' + fieldKey + '\')" style="display:none">';
+  }
+}
+
+async function openFile(keyOrPath){
+  try{
+    const fileInfo = DOCS_FILES[keyOrPath];
+    const path = fileInfo && fileInfo.path ? fileInfo.path : keyOrPath;
     const url = await supaGetSignedUrl(path);
-    window.open(url, '_blank');
+    // Create download link
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileInfo ? fileInfo.name : 'archivo';
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>a.remove(), 100);
   }catch(e){ alert('Error al abrir el archivo'); }
 }
 
-async function deleteFile(path){
+async function deleteFile(keyOrPath){
   if(!confirm('¿Borrar este archivo?')) return;
+  const fileInfo = DOCS_FILES[keyOrPath];
+  const path = fileInfo && fileInfo.path ? fileInfo.path : keyOrPath;
   await supaDelete(path);
-  delete DOCS_FILES[path];
+  delete DOCS_FILES[keyOrPath];
   saveDocsFiles();
   renderDocs();
 }
