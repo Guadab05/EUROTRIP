@@ -1345,13 +1345,17 @@ function renderAlojamiento(){
         <button onclick="toggleRes('alojamiento',${i},event)" style="font-size:11px;padding:4px 12px;border-radius:10px;border:1px solid;cursor:pointer;font-family:'Jost';transition:all .2s;margin-bottom:.6rem;${RES_STATE.alojamiento[i]?'background:#d4f0d0;color:#2e7d32;border-color:#a8d5a2':'background:#fff3cd;color:#856404;border-color:#f0c070'}">
           ${RES_STATE.alojamiento[i]?'✅ Confirmado':'⏳ Pendiente'}
         </button>
-        <div style="margin-top:.4rem">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.3rem">Notas / Link</div>
-          <textarea
-            placeholder="Pegá el link, nombre del lugar, precio real, código de reserva..."
-            onchange="updateAlojNota(${i},this.value)"
-            style="width:100%;min-height:70px;resize:vertical;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 10px;font-family:'Jost';font-size:12px;color:var(--text);line-height:1.5"
-          >${ALOJ_NOTAS[i]||''}</textarea>
+        <div style="margin-top:.75rem;display:flex;gap:.5rem;align-items:center">
+          ${ALOJ_NOTAS[i] ? `
+            <a href="${ALOJ_NOTAS[i]}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.5rem 1rem;background:var(--blush);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--rose-dark);text-decoration:none;font-family:'Jost'">
+              Ver en Airbnb →
+            </a>
+            <button onclick="updateAlojNota(${i},'');renderAlojamiento();" style="padding:.5rem .75rem;border-radius:10px;border:1px solid #f0a0a0;background:none;cursor:pointer;font-size:11px;color:#c05050">✕</button>
+          ` : `
+            <input type="text" placeholder="Pegá el link de Airbnb..."
+              onchange="updateAlojNota(${i},this.value.trim());renderAlojamiento();"
+              style="flex:1;background:var(--white);border:1px solid var(--border);border-radius:10px;padding:7px 10px;font-family:'Jost';font-size:12px;color:var(--text)">
+          `}
         </div>
       </div>
     </div>`;
@@ -1968,11 +1972,24 @@ const RES_STATE = {
 function saveRes(){ try{localStorage.setItem('europa2027_reservas', JSON.stringify(RES_STATE));}catch(e){} }
 
 const ALOJ_NOTAS = {};
+const ALOJ_URLS_DEFAULT = {
+  0: 'https://www.airbnb.com.ar/rooms/35605066',
+  1: 'https://www.airbnb.com.ar/rooms/5667289',
+  2: 'https://www.airbnb.com.ar/rooms/7499833',
+  3: 'https://www.airbnb.com.ar/rooms/50753311',
+  4: 'https://www.airbnb.com.ar/rooms/1028940182417012340',
+  5: '',
+  6: 'https://www.airbnb.com.ar/rooms/35605066',
+};
 function saveAlojNotas(){ try{localStorage.setItem('europa2027_aloj_notas', JSON.stringify(ALOJ_NOTAS));}catch(e){} }
 function loadAlojNotas(){
   try{
     const d = localStorage.getItem('europa2027_aloj_notas');
     if(d) Object.assign(ALOJ_NOTAS, JSON.parse(d));
+    // Pre-populate with known URLs if not set
+    Object.keys(ALOJ_URLS_DEFAULT).forEach(k=>{
+      if(!ALOJ_NOTAS[k] && ALOJ_URLS_DEFAULT[k]) ALOJ_NOTAS[k] = ALOJ_URLS_DEFAULT[k];
+    });
   }catch(e){}
 }
 function updateAlojNota(idx, val){
