@@ -815,7 +815,7 @@ body.view-mode .view-banner { display:block; }
 
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab('plan',this)">Plan mensual</button>
-    <button class="tab-btn" onclick="showTab('minimo',this)">Ahorro mínimo</button>
+    <button class="tab-btn" onclick="showTab('minimo',this)">Ahorro ideal</button>
   </div>
   <div id="tp-plan" class="tab-panel active">
     <div class="three-col-tables">
@@ -1812,10 +1812,16 @@ function updateTortaSummary() {
   }).join('');
 
   // Resumen cards
+  const tcUsedForCalc = (REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_opt[i];
+  const ahorroIdealUSD = d.ahorroARS / tcUsedForCalc;
+  const minimoARS = calcMin(S.tc_opt)[i] || 0;
+  const minimoUSD = minimoARS > 0 ? minimoARS / S.tc_opt[i] : 0;
+
   document.getElementById('torta-resumen').innerHTML = [
     { label: 'Ingreso total',  value: '$'+f(d.sueldo),    color: 'var(--text)' },
     { label: 'Sale en gastos', value: '-$'+f(d.tarjetas+d.fijos), color: '#c47a8a' },
-    { label: realUSD>0?'Ahorro real':'Ahorro minimo', value: 'U$S '+f(realUSD>0?realUSD:d.ahorroARS/((REAL[i]&&REAL[i].tc)?REAL[i].tc:S.tc_opt[i])), color: '#4a8a44' },
+    { label: realUSD>0?'Ahorro real':'Ahorro ideal', value: 'U$S '+f(realUSD>0?realUSD:ahorroIdealUSD), color: '#4a8a44' },
+    { label: 'Ahorro mínimo',  value: minimoUSD>0?'U$S '+f(minimoUSD):'Meta alcanzable', color: '#7a9a74' },
     { label: 'Te queda libre', value: '$'+f(d.libre), color: '#c9a96e' },
   ].map(c => `
     <div style="text-align:center;padding:.5rem">
